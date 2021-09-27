@@ -4,6 +4,11 @@ from posixpath import join
 import pandas as pd
 from pba import divideIntervals ,subtractIntervals ,multiplyIntervals ,addIntervals
 
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl
+
 home = Path.Path(__file__).parent
 
 default_csv_file = 'default_question_library.csv'
@@ -18,13 +23,15 @@ class Question:
         self.PLR = PLR
         self.NLR = NLR
         self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
-        
-
+    
     def _inherit_PPV(self,PPV):
         self.PPV = PPV
 
     def _add_question(self, question):
         self.question_text = question
+
+    def get_question(self):
+        return self.question_text
 
     def _add_options(self,*predValue):
         self.option_type = 'misc'
@@ -79,7 +86,7 @@ class Question:
 
 class Questionaire:
     default_csv_file = join(home,default_csv_file)
-
+    _verbose = True
     def __init__(self):
         print('Initialising with the default questionaire: \n \t{}'.format(self.default_csv_file))
         self.load_questionaire_csv(self.default_csv_file)
@@ -90,11 +97,13 @@ class Questionaire:
     def generate_questionaire(self):
 
         for i in self.csv.index:
-            qid = self.csv.iloc[i]['Qid']
-            question = self.csv.iloc[i]['Question']
-            PLR = [self.csv.iloc[i]['PLR0'], self.csv.iloc[i]['PLR1']]
-            NLR = [self.csv.iloc[i]['NLR0'], self.csv.iloc[i]['NLR1']]
+            qid = self.csv.loc[i]['Qid']
+            question = self.csv.loc[i]['Question']
+            PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
+            NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
             self._init_question(qid,question,PLR,NLR)
+            if self._verbose:
+                print('Question {} - {}'.format(qid,question))
 
     def get_N_questions(self):
         return len(self.csv.index)
@@ -116,12 +125,17 @@ class Questionaire:
             qId0 = list(self.question_dict.keys())[i]
             if inp == 1:
                 ppv = self.question_dict[qId0].yes()
+                ans = 'yes'
             elif inp == 0:
                 ppv = self.question_dict[qId0].no()
+                no = 'no'
             else:
                 ppv = self.question_dict[qId0].dont_know()
+                ans = 'dont know'
             
-            print('i : {} \n ppv: {}'.format(i,ppv))
+            if self._verbose:
+                print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
+                    self.question_dict[qId0].get_question(), ans, ppv))
 
             if i == self.get_N_questions()-1:
                 self.final_ppv = ppv
@@ -138,14 +152,75 @@ class Questionaire:
         else:
             return self.final_ppv
 
-        
+
+class ICON_ARRAY:
+
+    out_of = 10000
+    marker = 'o'
+    n_rows = 50
+    n_cols = out_of/n_rows
+    colors = ['red', 'orange', 'gray']
+    other_string = 'unaffected'
+    scale = 10
+
+    def __init__(self, **kwargs):
+        classes = {}
+        for key, value in kwargs.items():
+            classes[key] = value
+
+        self.classes = classes
+
+    def plot(self, **kwargs):
+
+        x = np.arange(int(n_cols/self.scale))
+        y = np.arange(int(n_rows/self.scale))
+
+        X, Y = np.meshgrid(x, y)
+        xx = np.hstack(X)
+        yy = np.hstack(Y)
+
+        fig, ax = plt.subplots(1, 1, figsize=(n_cols/10, n_rows/10))
+        missing = []
+        i = 0
+        v0 = 0
+        labels = []
+        for key, value in self.classes.items():
+            value = int(value/self.scale)
+            ax.scatter(xx[v0:v0+value], yy[v0:v0+value],
+                       marker='o', c=self.colors[i], label=key, **kwargs)
+            missing.append(value)
+            labels.append(key)
+            v0 = v0+value
+            i = i+1
+
+        ax.scatter(xx[v0:], yy[v0:], marker='o',
+                   c=self.colors[i], label=self.other_string, **kwargs)
+        ax.axes.xaxis.set_ticks([])
+        ax.axes.yaxis.set_ticks([])
+        ax.legend(labels, loc="lower center",
+                  bbox_to_anchor=(0.1, -0.2), fontsize=15)
+        fig.subplots_adjust(bottom=0.1)
+        plt.show()
+
+
+
 
 
 import numpy as np
 Q = Questionaire()
 Q.generate_questionaire()
-    
-ans = np.zeros(len(Q.question_dict))
+len(Q.csv.index.values)
+len(Q.question_dict)
+
+
+IA = ICON_ARRAY(killed = 10,ill=240)
+IA.scale = 5
+IA.plot(s=90)
+
+
+
+
+ans = np.zeros(Q.csv.index)
 
 Q.evaluate_questionaire(ans)
 
