@@ -1,12 +1,19 @@
+import pathlib as Path
+from posixpath import join
 
+import pandas as pd
+from pba import divideIntervals ,subtractIntervals ,multiplyIntervals ,addIntervals
 
-default_csv_file = 'PATH_TO_CSV'
+home = Path.Path(__file__).parent
+
+default_csv_file = 'default_question_library.csv'
+
 
 class Question:
     option_type = 'DEFAULT'
     default_interval = [1,1]
     dfi = default_interval
-
+    PPV = 0.5
     def __init__(self, PLR, NLR):
         self.PLR = PLR
         self.NLR = NLR
@@ -67,32 +74,80 @@ class Question:
     def misc_answer(self,**predAnswer):
         # first check key is in options
         # then compoute 
+        return self
 
 
 class Questionaire:
-    default_csv_file = 'path_to_file'
+    default_csv_file = join(home,default_csv_file)
 
     def __init__(self):
+        print('Initialising with the default questionaire: \n \t{}'.format(self.default_csv_file))
         self.load_questionaire_csv(self.default_csv_file)
-    
-    def load_questionaire_csv(self,*csv_file):
-        self.csv = pd.read_csv(*csv_file)
+
+    def load_questionaire_csv(self,csv_file):
+        self.csv = pd.read_csv(csv_file, index_col=[0])
 
     def generate_questionaire(self):
-        
+
+        for i in self.csv.index:
+            qid = self.csv.iloc[i]['Qid']
+            question = self.csv.iloc[i]['Question']
+            PLR = [self.csv.iloc[i]['PLR0'], self.csv.iloc[i]['PLR1']]
+            NLR = [self.csv.iloc[i]['NLR0'], self.csv.iloc[i]['NLR1']]
+            self._init_question(qid,question,PLR,NLR)
+
+    def get_N_questions(self):
+        return len(self.csv.index)
+    
+    def get_final_question_id(self):
+        return self.csv.iloc[self.get_N_questions()]['Qid']
 
     def _init_question(self, qId, question, PLR, NLR):
-        if not hasattr(self,question_dict):
+        if not hasattr(self,'question_dict'):
+            print('Generating new questionaire')
             self.question_dict = {}
         
         self.question_dict[qId] = Question(PLR,NLR)
         self.question_dict[qId]._add_question(question)
 
+    def evaluate_questionaire(self, inputs):
 
+        for i, inp in enumerate(inputs):
+            qId0 = list(self.question_dict.keys())[i]
+            if inp == 1:
+                ppv = self.question_dict[qId0].yes()
+            elif inp == 0:
+                ppv = self.question_dict[qId0].no()
+            else:
+                ppv = self.question_dict[qId0].dont_know()
+            
+            print('i : {} \n ppv: {}'.format(i,ppv))
+
+            if i == self.get_N_questions()-1:
+                self.final_ppv = ppv
+                return self.final_ppv
+            
+            qId1 = list(self.question_dict.keys())[i+1]
+            self.question_dict[qId1]._inherit_PPV(ppv)
+            
+
+    def get_final_ppv(self):
+        if not hasattr(self, 'final_ppv'):
+            print(
+                'Error: You have not computed the PPV. Pass answers to self.evaluate_questionaire(inputs)')
+        else:
+            return self.final_ppv
+
+        
+
+
+import numpy as np
+Q = Questionaire()
+Q.generate_questionaire()
     
-    
-    
-    
+ans = np.zeros(len(Q.question_dict))
+
+Q.evaluate_questionaire(ans)
 
 
 
