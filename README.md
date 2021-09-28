@@ -5,6 +5,9 @@ This is the repository for the development of the GCA App.
 The development plan can be found here:
 https://docs.google.com/document/d/1UB8tSYIEYqy7esik7ofAW3qZedmkj7NDovvN079KOi0/edit?usp=sharing
 
+The paper with likelihood ratios
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7432275/
+
 TODO: 
 - setting all to True is obvs wrong = 1.2 right now 
 
