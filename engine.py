@@ -214,7 +214,7 @@ class Questionaire(Test):
             quest = 0
         else:
             quest =self.inc_question_ind
-        QId = list(self.question_dict.keys())[self.inc_question_ind]
+        QId = list(self.question_dict.keys())[quest]
         return self.question_dict[QId].question_text
 
     def get_final_ppv(self):
