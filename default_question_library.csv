@@ -1,0 +1,66 @@
+,Qid,Question,PLR0,PLR1,NLR0,NLR1
+0,1000,Headache,1.2,1.2,0.7,0.7
+1,1001,One sided,1.0,1.0,1.0,1.0
+2,1002,Diffuse,1.0,1.0,1.0,1.0
+3,1003,Abrupt-onset,1.0,1.0,1.0,1.0
+4,1004,Worst in am,1.0,1.0,1.0,1.0
+5,1005,Worst in cold,1.0,1.0,1.0,1.0
+6,2000,Temporal Artery,1.0,1.0,1.0,1.0
+7,3000,Beaded,4.6,4.6,0.93,0.93
+8,4000,Prominent,4.3,4.3,0.67,0.67
+9,5000,Tender,2.6,2.6,0.82,0.82
+10,6000,Abnormal,2.0,2.0,0.53,0.53
+11,7000,Any scalp?,1.0,1.0,1.0,1.0
+12,8000,Is it temporal headache ?,1.5,1.5,0.82,0.82
+13,9000,Any headache?,1.2,1.2,0.7,0.7
+14,10000,Scalp tenderness?,1.6,1.6,0.93,0.93
+15,2000,Does patient feel discomfort?,1.0,1.0,1.0,1.0
+16,2001,Systemic?,1.0,1.0,1.0,1.0
+17,2002,Weight loss?,1.3,1.3,0.89,0.89
+18,2003,Fatigue?,1.2,1.0,0.94,0.94
+19,2004,Fever,1.2,1.2,0.92,0.92
+20,2005,Anorexia?,1.2,1.2,0.87,0.87
+21,2006,Night sweats?,1.0,1.0,1.0,1.0
+22,2007,ORO-Facial,1.0,1.0,1.0,1.0
+23,2008,Jaw claudification,4.2,4.2,0.72,0.72
+24,2009,Jaw pain during chewing,1.0,1.0,1.0,1.0
+25,3000,Jaw pain after chewing?,1.0,1.0,1.0,1.0
+26,3001,Tounge pain during talking or swallowing?,1.0,1.0,1.0,1.0
+27,3002,Black tongue,1.0,1.0,1.0,1.0
+28,3003,Visual,1.0,1.0,1.0,1.0
+29,3004,New double vision?,1.0,1.0,1.0,1.0
+30,3005,Any visual symptoms?,1.1,1.1,0.97,0.97
+31,3006,Transient visual loss?,1.0,1.0,1.0,1.0
+32,3007,Iscaemic optic neuropathy or central artery occlusion,1.6,1.6,0.8,0.8
+33,3008,Unilateral visual loss?,0.85,0.85,1.2,1.2
+34,3009,Limb,1.0,1.0,1.0,1.0
+35,4000,Athralgia,1.1,1.1,1.0,1.0
+36,4001,PMR,0.97,0.97,0.99,0.99
+37,4002,Claudication,1.0,1.0,1.0,1.0
+38,4003,Myalgia,0.93,0.93,1.1,1.1
+39,4004,Synovitis,0.41,0.41,1.1,1.1
+40,4005,CNS,1.0,1.0,1.0,1.0
+41,4006,TIA,1.0,1.0,1.0,1.0
+42,4007,CVA-typical,1.0,1.0,1.0,1.0
+43,4008,CVA atypical,1.0,1.0,1.0,1.0
+44,4009,Dementia,1.0,1.0,1.0,1.0
+45,5000,Spinal cord infract,1.0,1.0,1.0,1.0
+46,5001,Mono-neuropathy,1.0,1.0,1.0,1.0
+47,5002,Poly-neuropathy,1.0,1.0,1.0,1.0
+48,5003,Vertebral artery occlusion,1.0,1.0,1.0,1.0
+49,5004,ESR,1.0,1.0,1.0,1.0
+50,5005,Greater than 100mm/h,1.9,1.9,0.8,0.8
+51,5006,Greater than 50mm/h,1.2,1.2,0.35,0.35
+52,5007,Less than 30mm/h,1.0,1.0,1.0,1.0
+53,5008,Abnormal,1.1,1.1,0.2,0.2
+54,5009,C-reactive protein?,1.0,1.0,1.0,1.0
+55,6000,Anaemia,1.5,1.5,0.79,0.79
+56,6001,Haemaglobin,1.0,1.0,1.0,1.0
+57,6002,Platelet count,1.0,1.0,1.0,1.0
+58,6003,Fibrinogen,1.0,1.0,1.0,1.0
+59,6004,Liver function tests?,1.0,1.0,1.0,1.0
+60,6005,CD8-T cells,1.0,1.0,1.0,1.0
+61,6006,Inter-leukin 6,1.0,1.0,1.0,1.0
+62,6007,IGA anticardiolipin antibody,1.0,1.0,1.0,1.0
+63,6008,IGG anticardiolipin antibody,1.0,1.0,1.0,1.0
+64,6009,Temporal artery biopsy histology,3.4,3.4,0.95,0.95

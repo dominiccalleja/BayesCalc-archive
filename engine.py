@@ -2,6 +2,7 @@ import pathlib as Path
 from posixpath import join
 
 import pandas as pd
+import time
 #from pba import divideIntervals ,subtractIntervals ,multiplyIntervals ,addIntervals
 
 from pba import Interval
@@ -11,22 +12,23 @@ import matplotlib as mpl
 
 
 
+
 home = Path.Path(__file__).parent
 default_csv_file = 'default_question_library.csv'
 
 
 class Question:
     option_type = 'DEFAULT'
-    default_interval = [1,1]
-    dfi = default_interval
-    PPV = 0.5
+    
+    dfi = Interval([1, 1]) #default_interval
+    PPV = Interval(0.5)
     def __init__(self, PLR, NLR):
-        self.PLR = PLR
-        self.NLR = NLR
+        self.PLR = Interval(PLR)
+        self.NLR = Interval(NLR)
         self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
     
     def _inherit_PPV(self,PPV):
-        self.PPV = PPV
+        self.PPV = Interval(PPV)
 
     def _add_question(self, question):
         self.question_text = question
@@ -44,39 +46,17 @@ class Question:
             # Might even be an idea to stick them in their own class!!! 
 
     def yes(self):
-        A = divideIntervals(self.dfi, self.PLR)
-        B = subtractIntervals(A, self.dfi)
-
-        C = multiplyIntervals(A,B)
-        D = addIntervals(self.dfi, C)
-        self.C_PPV =divideIntervals(self.dfi, D)
-        
+        self.C_PPV = compute_ppv(self.PLR, self.PPV)
         return self.C_PPV
 
     def no(self):
-        A = divideIntervals(self.dfi, self.PPV)
-
-        const = divideIntervals(self.NLR, 
-                                subtractIntervals(A, self.dfi))
-        NPV = divideIntervals(self.dfi, addIntervals(self.dfi, const))
-        self.C_PPV =subtractIntervals(self.dfi, NPV)
-        
+        self.C_PPV = compute_npv(self.NLR, self.PPV)
         return self.C_PPV
 
     def dont_know(self):
-        A = divideIntervals(self.dfi, self.PPV)
-
-        B = subtractIntervals(A, self.dfi)
-        C = divideIntervals(self.dfi,self.PLR)
-        D = multiplyIntervals(B,C)
-        ppv_U = divideIntervals(self.dfi, addIntervals(self.dfi, D))
-
-        const = divideIntervals(self.NPV, subtractIntervals(A, self.dfi))
-        NPV = divideIntervals(self.dfi, addIntervals(self.dfi, const))
-        ppv_L = subtractIntervals(self.dfi, NPV)
-        ppv = ppv_L + ppv_U
-        self.C_PPV =[np.min(ppv), np.max(ppv)]
-        
+        UB = compute_ppv(self.PLR, self.PPV)
+        LB = compute_npv(self.NLR, self.PPV)
+        self.C_PPV = Interval([LB.left, UB.right])
         return self.C_PPV
 
     def misc_answer(self,**predAnswer):
@@ -93,16 +73,20 @@ class Questionaire:
         self.load_questionaire_csv(self.default_csv_file)
 
     def load_questionaire_csv(self,csv_file):
-        self.csv = pd.read_csv(csv_file, index_col=[0])
+        if csv_file.split()[-1] == 'csv':
+            self.csv = pd.read_csv(csv_file, index_col=[0])
+        elif csv_file.split()[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
+            self.csv = pd.read_csv(csv_file, index_col=[0])
 
     def generate_questionaire(self):
 
         for i in self.csv.index:
+            
             qid = self.csv.loc[i]['Qid']
             question = self.csv.loc[i]['Question']
             PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
             NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-            self._init_question(qid,question,PLR,NLR)
+            self._init_question(i,question,PLR,NLR)
             if self._verbose:
                 print('Question {} - {} [{}]'.format(i,question, qid))
 
@@ -153,17 +137,25 @@ class Questionaire:
         else:
             return self.final_ppv
 
+def compute_ppv(LR,PPV):
+    C_PPV = (1+((PPV*-1)-1)/LR)*-1
+    return C_PPV
+
+
+def compute_npv(LR,NPV):
+    C_PPV = 1 / (1 + (LR/((1/NPV)-1)))
+    return C_PPV
+
 
 class ICON_ARRAY:
 
     out_of = 10000
     marker = 'o'
     n_rows = 50
-    n_cols = out_of/n_rows
     colors = ['red', 'orange', 'gray']
     other_string = 'unaffected'
     scale = 10
-
+    n_cols = out_of/n_rows
     def __init__(self, **kwargs):
         classes = {}
         for key, value in kwargs.items():
@@ -173,14 +165,14 @@ class ICON_ARRAY:
 
     def plot(self, **kwargs):
 
-        x = np.arange(int(n_cols/self.scale))
-        y = np.arange(int(n_rows/self.scale))
+        x = np.arange(int(self.n_cols/self.scale))
+        y = np.arange(int(self.n_rows/self.scale))
 
         X, Y = np.meshgrid(x, y)
         xx = np.hstack(X)
         yy = np.hstack(Y)
 
-        fig, ax = plt.subplots(1, 1, figsize=(n_cols/10, n_rows/10))
+        fig, ax = plt.subplots(1, 1, figsize=(self.n_cols/10, self.n_rows/10))
         missing = []
         i = 0
         v0 = 0
@@ -207,13 +199,16 @@ class ICON_ARRAY:
 
 
 
+
+
+
 import numpy as np
 Q = Questionaire()
 Q.generate_questionaire()
 len(Q.csv.index.values)
 len(Q.question_dict.keys())
 
-ans = np.ones(len(Q.csv.index))
+ans = np.zeros(len(Q.csv.index))
 Q.evaluate_questionaire(ans)
 
 
