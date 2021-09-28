@@ -108,7 +108,7 @@ class Questionaire:
 
     def evaluate_questionaire(self, inputs):
         
-        self.question_dict[0].PPV = self.prevelence
+        self.question_dict[0].PPV = Interval(self.prevelence)
 
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
