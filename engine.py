@@ -15,7 +15,7 @@ import matplotlib as mpl
 try: 
     home = Path.Path(__file__).parent
 except:
-    home = Path.Path(__file__).parent
+    home = Path.Path('__file__').parent
 
 default_csv_file = 'default_question_library.csv'
 
@@ -238,7 +238,7 @@ Qtest.generate_questionaire()
 ans = np.ones(len(Qtest.csv.index))
 all_true = Qtest.evaluate_questionaire(ans)
 
-ans = np.zeros(len(Qtest.csv.index))
+ans = np.zero(len(Qtest.csv.index))
 all_false = Qtest.evaluate_questionaire(ans)
 
 
