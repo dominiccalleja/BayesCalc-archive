@@ -145,7 +145,7 @@ class Questionaire:
             return self.final_ppv
 
 def compute_ppv(LR,PPV):
-    C_PPV = (1+((PPV*-1)-1)/LR)*-1
+    C_PPV = 1/(1+(1/PPV-1)/LR)
     return C_PPV
 
 
