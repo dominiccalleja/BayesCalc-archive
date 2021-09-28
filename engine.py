@@ -84,6 +84,12 @@ class Question:
         # then compoute 
         return self
 
+class Test(Question):
+
+    def __init__(self):
+        super().__init__()
+
+
 
 class Questionaire:
     default_csv_file = join(home,default_csv_file)
