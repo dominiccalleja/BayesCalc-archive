@@ -12,8 +12,11 @@ import matplotlib as mpl
 
 
 
-
-home = Path.Path(__file__).parent
+try: 
+    home = Path.Path(__file__).parent
+except:
+    home = Path.Path(__file__).parent
+    
 default_csv_file = 'default_question_library.csv'
 
 
