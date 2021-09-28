@@ -9,6 +9,9 @@ The paper with likelihood ratios
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7432275/
 
 TODO: 
+- BUG ---- DONT KNOW method is returning weird answers
+
+
 [FIXED]- setting all to True is obvs wrong = 1.2 right now 
 [FIXED]- BUG: seems there is a bug. there is a longer csv.index than number of questions. Need to check and figure out why
 [COMPLETE]- check underlying pba funcitons [COMPLETE. Not using old version]
