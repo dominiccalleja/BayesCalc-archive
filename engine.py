@@ -171,6 +171,25 @@ def compute_npv(LR,NPV):
     C_PPV = 1 / (1 + (LR/((1/NPV)-1)))
     return C_PPV
 
+def PPV(sens, spec, prev):
+    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
+        A = Interval(sens*prev)
+        B = Interval((1-spec)*(1-prev))
+        L = A.left/(A.left+B.right)
+        U = A.right/(A.right+B.left)
+        return Interval(L, U)
+    else:
+        return (sens*prev)/(sens*prev+(1-spec)*(1-prev))
+
+def NPV(sens, spec, prev):
+    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
+        A = Interval((1-sens)*prev)
+        B = Interval(spec*(1-prev))
+        L = B.left/(B.left+A.right)
+        U = B.right/(A.left+B.right)
+        return Interval(L, U)
+    else:
+        return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
 
 class ICON_ARRAY:
 
