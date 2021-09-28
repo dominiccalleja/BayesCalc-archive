@@ -1,7 +1,9 @@
 import sys
-from engine import *
+from engine import Questionaire as Questionaire
 
+print(sys.argv[1])
 Q = Questionaire()
+Q.prevelence = 0.01
+Q.load_questionaire_csv('test_3_inputs.csv')
 Q.generate_questionaire()
-Q.evaluate_questionaire(sys.argv)
-
+Q.evaluate_questionaire(inputs = [int(i) for i in list(sys.argv[1])])
