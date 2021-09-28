@@ -196,7 +196,7 @@ class Questionaire(Test):
             ans = 'dont know'
         return ppv
 
-    def answer_next_question(self,answer, PPV): 
+    def answer_next_question(self,answer): 
         if not hasattr(self,'inc_question_ind'):
             self.inc_question_ind = 0
             self._increment_PPV = self.prevelence
