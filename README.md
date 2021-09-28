@@ -9,14 +9,14 @@ The paper with likelihood ratios
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7432275/
 
 TODO: 
-- setting all to True is obvs wrong = 1.2 right now 
+[FIXED]- setting all to True is obvs wrong = 1.2 right now 
+[FIXED]- BUG: seems there is a bug. there is a longer csv.index than number of questions. Need to check and figure out why
+[COMPLETE]- check underlying pba funcitons [COMPLETE. Not using old version]
 
-- BUG: seems there is a bug. there is a longer csv.index than number of questions. Need to check and figure out why
 
-- check underlying pba funcitons
 - add the functionality to generate a JS script. 
 - add functionality to have 2 tiers of questions. Should run from something cleaver with the csv. Maybe grouped == 1 and a new class sub_question only invoked on a true at the previous tier.' 
-- get the icon array coded too. 
+[COMPLETE]- get the icon array coded too. 
 
 
 
