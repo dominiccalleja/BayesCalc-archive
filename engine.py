@@ -200,7 +200,7 @@ class Questionaire(Test):
         if not hasattr(self,'inc_question_ind'):
             self.inc_question_ind = 0
             self._increment_PPV = self.prevelence
-        QId = list(self.question_dict.keys())[i]
+        QId = list(self.question_dict.keys())[self.inc_question_ind]
         self._increment_PPV = answer_question(self,QID, answer, self._increment_PPV)
         
         if self.inc_question_ind == len(list(self.question_dict.keys()))-1:
