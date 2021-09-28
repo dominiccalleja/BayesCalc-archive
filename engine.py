@@ -196,10 +196,15 @@ class Questionaire(Test):
             ans = 'dont know'
         return ppv
 
-    # def 
-    #     if not hasattr(self,'inc_question_ind'):
-    #         self.inc_question_ind = 0
-            
+    def answer_next_question(self,answer, PPV): 
+        if not hasattr(self,'inc_question_ind'):
+            self.inc_question_ind = 0
+            self._increment_PPV = self.prevelence
+        QId = list(self.question_dict.keys())[i]
+        self._increment_PPV = answer_question(self,QID, answer, self._increment_PPV)
+        
+        if self.inc_question_ind == len(list(self.question_dict.keys()))-1:
+            self.final_ppv = self._increment_PPV
         
 
     def get_final_ppv(self):
