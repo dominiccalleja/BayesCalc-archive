@@ -25,10 +25,26 @@ class Question:
     
     dfi = Interval([1, 1]) #default_interval
     PPV = Interval(0.01)
+    #use_sensitivity_specificity = False
 
-    def __init__(self, PLR, NLR):
+    def __init__(self, PLR=None, NLR=None, sensitivity=None, specificity=None):
+
+        #TODO fix the error handling for the weird combos of different stats
+        if PLR is not None:
+            assert NLR is not None
+            assert sensitivity is None and specificity is None
+        else:
+            assert sensitivity is not None and specificity is not None
+            if specificity:
+                specificity = .9999999
+                            
+            PLR = sensitivity/(1-specificity)
+            NLR = (1-sensitivity)/specificity
+        
         self.PLR = Interval(PLR)
         self.NLR = Interval(NLR)
+
+
         self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
     
     def _inherit_PPV(self,PPV):
@@ -134,8 +150,7 @@ class Questionaire:
                 return self.final_ppv
             
             qId1 = list(self.question_dict.keys())[i+1]
-            self.question_dict[qId1]._inherit_PPV(ppv)
-            
+            self.question_dict[qId1]._inherit_PPV(ppv) 
 
     def get_final_ppv(self):
         if not hasattr(self, 'final_ppv'):
@@ -143,6 +158,9 @@ class Questionaire:
                 'Error: You have not computed the PPV. Pass answers to self.evaluate_questionaire(inputs)')
         else:
             return self.final_ppv
+
+    def get_natural_frequency(self, denominator = 1000):
+        return denominator * self.final_ppv
 
 def compute_ppv(LR,PPV):
     C_PPV = 1/(1+(1/PPV-1)/LR)
@@ -207,90 +225,89 @@ class ICON_ARRAY:
 
 
 
+if __name__ == '__main__':
+    import numpy as np
+    Q = Questionaire()
+    Q.generate_questionaire()
+    len(Q.csv.index.values)
+    len(Q.question_dict.keys())
+
+    ans = np.ones(len(Q.csv.index))
+    Q.evaluate_questionaire(ans)
 
 
-import numpy as np
-Q = Questionaire()
-Q.generate_questionaire()
-len(Q.csv.index.values)
-len(Q.question_dict.keys())
-
-ans = np.ones(len(Q.csv.index))
-Q.evaluate_questionaire(ans)
-
-
-IA = ICON_ARRAY(killed = 10,ill=240)
-IA.scale = 5
-IA.plot(s=90)
-
-
-
-
-"""
-Testing with reduced questions
-"""
-csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
-Qtest = Questionaire()
-Qtest.load_questionaire_csv( csv_test)
-Qtest.generate_questionaire()
-
-
-ans = np.ones(len(Qtest.csv.index))
-all_true = Qtest.evaluate_questionaire(ans)
-
-ans = np.zero(len(Qtest.csv.index))
-all_false = Qtest.evaluate_questionaire(ans)
+    IA = ICON_ARRAY(killed = 10,ill=240)
+    IA.scale = 5
+    IA.plot(s=90)
 
 
 
 
+# """
+# Testing with reduced questions
+# """
+# csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
+# Qtest = Questionaire()
+# Qtest.load_questionaire_csv( csv_test)
+# Qtest.generate_questionaire()
 
-def computePrevelanceModel(gen, ag):
 
-        from pba import linear_interpolate as li
+# ans = np.ones(len(Qtest.csv.index))
+# all_true = Qtest.evaluate_questionaire(ans)
 
-        male_age_prev = {'Age': [50, 60, 70, 80, 90],
-                        'Prevelance_Lower': [46/100000, 46/100000, 90/100000, 275/100000, 600/100000],
-                        'Prevelance_Upper': [156/100000, 160/100000, 170/100000, 450/100000, 700/100000]}
+# ans = np.zeros(len(Qtest.csv.index))
+# all_false = Qtest.evaluate_questionaire(ans)
 
-        female_age_prev = {'Age': [50, 60, 70, 80, 90],
-                        'Prevelance_Lower': [46/100000, 46/100000, 250/100000, 1000/100000, 1700/100000],
-                           'Prevelance_Upper': [156/100000, 160/100000, 300/100000, 1200/100000, 1900/100000]}
 
-        if (gen == 'male' and ag < 50):
-            prev = [0.001, 0.001]
 
-        elif (gen == 'male' and ag <= 90):
-            prev_lower = li(male_age_prev['Age'],
-                            male_age_prev['Prevelance_Lower'], ag)
-            prev_upper = li(male_age_prev['Age'],
-                            male_age_prev['Prevelance_Upper'], ag)
-            prev = [prev_lower, prev_upper]
 
-        elif (gen == 'male' and ag > 90):
-            prev_lower = li(male_age_prev['Age'],
-                            male_age_prev['Prevelance_Lower'], 90)
-            prev_upper = li(male_age_prev['Age'],
-                            male_age_prev['Prevelance_Upper'], 90)
-            prev = [prev_lower, prev_upper]
 
-        if (gen == 'female' and ag <= 50):
-            prev = [0.001, 0.001]
+# def computePrevelanceModel(gen, ag):
 
-        elif (gen == 'female' and ag <= 90):
-            prev_lower = li(
-                female_age_prev['Age'], female_age_prev['Prevelance_Lower'], ag)
-            prev_upper = li(
-                female_age_prev['Age'], female_age_prev['Prevelance_Upper'], ag)
-            prev = [prev_lower, prev_upper]
+#         from pba import linear_interpolate as li
 
-        elif (gen == 'female' and ag > 90):
-            prev_lower = li(
-                female_age_prev['Age'], female_age_prev['Prevelance_Lower'], 90)
-            prev_upper = li(
-                female_age_prev['Age'], female_age_prev['Prevelance_Upper'], 90)
-            prev = [prev_lower, prev_upper]
+#         male_age_prev = {'Age': [50, 60, 70, 80, 90],
+#                         'Prevelance_Lower': [46/100000, 46/100000, 90/100000, 275/100000, 600/100000],
+#                         'Prevelance_Upper': [156/100000, 160/100000, 170/100000, 450/100000, 700/100000]}
 
-        return prev
-    # compute prevelance from gender and age
-    vprev1 = computePrevelanceModel(gender, age)
+#         female_age_prev = {'Age': [50, 60, 70, 80, 90],
+#                         'Prevelance_Lower': [46/100000, 46/100000, 250/100000, 1000/100000, 1700/100000],
+#                            'Prevelance_Upper': [156/100000, 160/100000, 300/100000, 1200/100000, 1900/100000]}
+
+#         if (gen == 'male' and ag < 50):
+#             prev = [0.001, 0.001]
+
+#         elif (gen == 'male' and ag <= 90):
+#             prev_lower = li(male_age_prev['Age'],
+#                             male_age_prev['Prevelance_Lower'], ag)
+#             prev_upper = li(male_age_prev['Age'],
+#                             male_age_prev['Prevelance_Upper'], ag)
+#             prev = [prev_lower, prev_upper]
+
+#         elif (gen == 'male' and ag > 90):
+#             prev_lower = li(male_age_prev['Age'],
+#                             male_age_prev['Prevelance_Lower'], 90)
+#             prev_upper = li(male_age_prev['Age'],
+#                             male_age_prev['Prevelance_Upper'], 90)
+#             prev = [prev_lower, prev_upper]
+
+#         if (gen == 'female' and ag <= 50):
+#             prev = [0.001, 0.001]
+
+#         elif (gen == 'female' and ag <= 90):
+#             prev_lower = li(
+#                 female_age_prev['Age'], female_age_prev['Prevelance_Lower'], ag)
+#             prev_upper = li(
+#                 female_age_prev['Age'], female_age_prev['Prevelance_Upper'], ag)
+#             prev = [prev_lower, prev_upper]
+
+#         elif (gen == 'female' and ag > 90):
+#             prev_lower = li(
+#                 female_age_prev['Age'], female_age_prev['Prevelance_Lower'], 90)
+#             prev_upper = li(
+#                 female_age_prev['Age'], female_age_prev['Prevelance_Upper'], 90)
+#             prev = [prev_lower, prev_upper]
+
+#         return prev
+#     # compute prevelance from gender and age
+#     vprev1 = computePrevelanceModel(gender, age)
