@@ -163,6 +163,11 @@ class Questionaire(Test):
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
             PPV = self.answer_question(qId0,inp,PPV)
+
+
+            if self._verbose:
+                print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
+                    self.question_dict[qId0].get_question(), inp, PPV))
         self.final_ppv = PPV
             # if inp:
             #     ppv = self.question_dict[qId0].yes(PPV)
@@ -174,9 +179,7 @@ class Questionaire(Test):
             #     ppv = self.question_dict[qId0].dont_know(PPV)
             #     ans = 'dont know'
             
-            # if self._verbose:
-            #     print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
-            #         self.question_dict[qId0].get_question(), ans, ppv))
+            
 
             # if i == self.get_N_questions()-1:
             #     self.final_ppv = ppv
@@ -201,7 +204,7 @@ class Questionaire(Test):
             self.inc_question_ind = 0
             self._increment_PPV = self.prevelence
         QId = list(self.question_dict.keys())[self.inc_question_ind]
-        self._increment_PPV = answer_question(self,QID, answer, self._increment_PPV)
+        self._increment_PPV = self.answer_question(QId, answer, self._increment_PPV)
         
         if self.inc_question_ind == len(list(self.question_dict.keys()))-1:
             self.final_ppv = self._increment_PPV
