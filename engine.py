@@ -24,7 +24,6 @@ class Question:
     option_type = 'DEFAULT'
     
     dfi = Interval([1, 1]) #default_interval
-    PPV = Interval(0.01)
     #use_sensitivity_specificity = False
 
     def __init__(self, PLR=None, NLR=None, sensitivity=None, specificity=None):
@@ -35,7 +34,7 @@ class Question:
             assert sensitivity is None and specificity is None
         else:
             assert sensitivity is not None and specificity is not None
-            if specificity:
+            if specificity == 1:
                 specificity = .9999999
                             
             PLR = sensitivity/(1-specificity)
@@ -45,12 +44,17 @@ class Question:
         self.NLR = Interval(NLR)
 
         self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
+
+    #     self._check_instanciation()
+    # def _check_instanciation(self):
+    #     if not hasattr(self,'PPV'):
+    #         PPV = Interval(0.01)
     
     def __repr__(self):
         return 'Question {}:  {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.question_number, self.PLR,self.NLR)
 
-    def _inherit_PPV(self,PPV):
-        self.PPV = Interval(PPV)
+    # def _inherit_PPV(self,PPV):
+    #     self.PPV = Interval(PPV)
 
     def _add_question(self, question, question_number = ''):
         self.question_text = question
@@ -68,17 +72,20 @@ class Question:
         #### These answers are still a bloody mess. Need to split them up into more sensible methods too! 
             # Might even be an idea to stick them in their own class!!! 
 
-    def yes(self):
-        self.C_PPV = compute_ppv(self.PLR, self.PPV)
+    def yes(self,PPV):
+        self.C_PPV = compute_ppv(self.PLR, PPV)
         return self.C_PPV
 
-    def no(self):
-        self.C_PPV = compute_npv(self.NLR, self.PPV)
+    def no(self,PPV):
+        #C_PPV = compute_ppv(self.NLR, self.PPV)
+        C_PPV = compute_npv(self.NLR, PPV)
+        self.C_PPV = 1 - C_PPV
+        #self.
         return self.C_PPV
 
-    def dont_know(self):
-        UB = compute_ppv(self.PLR, self.PPV)
-        LB = compute_npv(self.NLR, self.PPV)
+    def dont_know(self,PPV):
+        UB = compute_ppv(self.PLR, PPV)
+        LB = compute_npv(self.NLR, PPV)
         self.C_PPV = Interval([LB.left, UB.right])
         return self.C_PPV
 
@@ -87,18 +94,33 @@ class Question:
         # then compoute 
         return print('TO DO')
 
+
+
 class Test(Question):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, sensitivity, specificity, PPV):
+        super().__init__(sensitivity=sensitivity, specificity=sensitivity)
+        self._PPV_pretest = PPV
+    
+    def what_if(self):
+
+        if_positive = self.yes(self._PPV_pretest)
+        if_negative = self.no(self._PPV_pretest)
+
+        test_string = []
+        test_string.append('Should you administer a test?')
+        test_string.append( 'This patients has a current PPV of {}'.format(self._PPV_pretest))
+        test_string.append('\n\t A positive test would give the patient a PPV of {}'.format(if_positive))
+        test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
+    
+        print(*test_string)
 
 
 
-class Questionaire:
+class Questionaire(Test):
     default_csv_file = join(home,default_csv_file)
     _verbose = True
-    PPV = prevelence = 0.5
-
+    prevelence = 0.5
     def __init__(self):
         print('Initialising with the default questionaire: \n \t{}'.format(self.default_csv_file))
         self.load_questionaire_csv(self.default_csv_file)
@@ -136,18 +158,18 @@ class Questionaire:
 
     def evaluate_questionaire(self, inputs):
         
-        self.question_dict[0].PPV = Interval(self.prevelence)
+        PPV = Interval(self.prevelence)
 
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
             if inp:
-                ppv = self.question_dict[qId0].yes()
+                ppv = self.question_dict[qId0].yes(PPV)
                 ans = 'yes'
             elif not inp:
-                ppv = self.question_dict[qId0].no()
+                ppv = self.question_dict[qId0].no(PPV)
                 ans = 'no'
             else:
-                ppv = self.question_dict[qId0].dont_know()
+                ppv = self.question_dict[qId0].dont_know(PPV)
                 ans = 'dont know'
             
             if self._verbose:
@@ -159,7 +181,8 @@ class Questionaire:
                 return self.final_ppv
             
             qId1 = list(self.question_dict.keys())[i+1]
-            self.question_dict[qId1]._inherit_PPV(ppv) 
+            PPV = ppv 
+            #self.question_dict[qId1]._inherit_PPV(ppv) 
 
     def get_final_ppv(self):
         if not hasattr(self, 'final_ppv'):
@@ -170,6 +193,13 @@ class Questionaire:
 
     def get_natural_frequency(self, denominator = 1000):
         return denominator * self.final_ppv
+
+    def what_if_test(self,sense, spec):
+        super().__init__(sense, spec,self.final_ppv)
+        self.what_if()
+
+
+
 
 def compute_ppv(LR,PPV):
     C_PPV = 1/(1+(1/PPV-1)/LR)
@@ -200,88 +230,45 @@ def NPV(sens, spec, prev):
     else:
         return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
 
-class ICON_ARRAY:
-
-    out_of = 10000
-    marker = 'o'
-    n_rows = 50
-    colors = ['red', 'orange', 'gray']
-    other_string = 'unaffected'
-    scale = 10
-    n_cols = out_of/n_rows
-    def __init__(self, **kwargs):
-        classes = {}
-        for key, value in kwargs.items():
-            classes[key] = value
-
-        self.classes = classes
-
-    def plot(self, **kwargs):
-
-        x = np.arange(int(self.n_cols/self.scale))
-        y = np.arange(int(self.n_rows/self.scale))
-
-        X, Y = np.meshgrid(x, y)
-        xx = np.hstack(X)
-        yy = np.hstack(Y)
-
-        fig, ax = plt.subplots(1, 1, figsize=(self.n_cols/10, self.n_rows/10))
-        missing = []
-        i = 0
-        v0 = 0
-        labels = []
-        for key, value in self.classes.items():
-            value = int(value/self.scale)
-            ax.scatter(xx[v0:v0+value], yy[v0:v0+value],
-                       marker='o', c=self.colors[i], label=key, **kwargs)
-            missing.append(value)
-            labels.append(key)
-            v0 = v0+value
-            i = i+1
-
-        ax.scatter(xx[v0:], yy[v0:], marker='o',
-                   c=self.colors[i], label=self.other_string, **kwargs)
-        ax.axes.xaxis.set_ticks([])
-        ax.axes.yaxis.set_ticks([])
-        ax.legend(labels, loc="lower center",
-                  bbox_to_anchor=(0.1, -0.2), fontsize=15)
-        fig.subplots_adjust(bottom=0.1)
-        plt.show()
-
-
-
-
-
 
 if __name__ == '__main__':
     import numpy as np
-    Q = Questionaire()
-    Q.generate_questionaire()
-    len(Q.csv.index.values)
-    len(Q.question_dict.keys())
-
-    ans = np.ones(len(Q.csv.index))
-    Q.evaluate_questionaire(ans)
 
 
-    IA = ICON_ARRAY(killed = 10,ill=240)
-    IA.scale = 5
-    IA.plot(s=90)
+    csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
+    Qtest = Questionaire()
+    Qtest.prevelence = 0.01
+    Qtest.load_questionaire_csv( csv_test)
+    Qtest.generate_questionaire()
+
+
+    ans = [0,1,0]#np.ones(len(Qtest.csv.index))
+    all_true = Qtest.evaluate_questionaire(ans)
+
+    Qtest.what_if_test(.9,.9)
+    
+    
+    # Q = Questionaire()
+    # Q.generate_questionaire()
+    # len(Q.csv.index.values)
+    # len(Q.question_dict.keys())
+
+    # ans = np.ones(len(Q.csv.index))
+    # Q.evaluate_questionaire(ans)
+
+
+    # IA = ICON_ARRAY(killed = 10,ill=240)
+    # IA.scale = 5
+    # IA.plot(s=90)
 
 
 
 
-# """
-# Testing with reduced questions
-# """
-# csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
-# Qtest = Questionaire()
-# Qtest.load_questionaire_csv( csv_test)
-# Qtest.generate_questionaire()
+"""
+Testing with reduced questions
+"""
 
 
-# ans = np.ones(len(Qtest.csv.index))
-# all_true = Qtest.evaluate_questionaire(ans)
 
 # ans = np.zeros(len(Qtest.csv.index))
 # all_false = Qtest.evaluate_questionaire(ans)
