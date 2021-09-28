@@ -2,15 +2,16 @@ import pathlib as Path
 from posixpath import join
 
 import pandas as pd
-from pba import divideIntervals ,subtractIntervals ,multiplyIntervals ,addIntervals
+#from pba import divideIntervals ,subtractIntervals ,multiplyIntervals ,addIntervals
+
+from pba import Interval
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-mpl
+
 
 home = Path.Path(__file__).parent
-
 default_csv_file = 'default_question_library.csv'
 
 
@@ -103,7 +104,7 @@ class Questionaire:
             NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
             self._init_question(qid,question,PLR,NLR)
             if self._verbose:
-                print('Question {} - {}'.format(qid,question))
+                print('Question {} - {} [{}]'.format(i,question, qid))
 
     def get_N_questions(self):
         return len(self.csv.index)
@@ -128,7 +129,7 @@ class Questionaire:
                 ans = 'yes'
             elif inp == 0:
                 ppv = self.question_dict[qId0].no()
-                no = 'no'
+                ans = 'no'
             else:
                 ppv = self.question_dict[qId0].dont_know()
                 ans = 'dont know'
@@ -210,7 +211,10 @@ import numpy as np
 Q = Questionaire()
 Q.generate_questionaire()
 len(Q.csv.index.values)
-len(Q.question_dict)
+len(Q.question_dict.keys())
+
+ans = np.ones(len(Q.csv.index))
+Q.evaluate_questionaire(ans)
 
 
 IA = ICON_ARRAY(killed = 10,ill=240)
@@ -219,10 +223,6 @@ IA.plot(s=90)
 
 
 
-
-ans = np.zeros(Q.csv.index)
-
-Q.evaluate_questionaire(ans)
 
 
 
