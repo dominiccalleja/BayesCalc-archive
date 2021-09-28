@@ -89,12 +89,27 @@ class Question:
 
 class Test(Question):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, sensitivity, specificity):
+        super().__init__(sensitivity=sensitivity, specificity=sensitivity)
+
+    
+    def what_if(self):
+
+        if_positive = self.yes()
+        if_negative = self.no()
+
+        test_string = []
+        test_string.append('Should you administer a test?')
+        test_string.append( 'This patients has a current PPV of {}'.format(self.C_PPV))
+        test_string.append('\n\t A positive test would give the patient a PPV of {}'.format(if_positive))
+        test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
+    
+        print(*test_string)
 
 
 
-class Questionaire:
+
+class Questionaire(Test):
     default_csv_file = join(home,default_csv_file)
     _verbose = True
     PPV = prevelence = 0.5
@@ -170,6 +185,13 @@ class Questionaire:
 
     def get_natural_frequency(self, denominator = 1000):
         return denominator * self.final_ppv
+
+    def what_if_test(self,sense, spec):
+        super().__init__(sense, spec)
+        self.what_if()
+
+
+
 
 def compute_ppv(LR,PPV):
     C_PPV = 1/(1+(1/PPV-1)/LR)
@@ -271,20 +293,23 @@ if __name__ == '__main__':
 
 
 
-# """
-# Testing with reduced questions
-# """
-# csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
-# Qtest = Questionaire()
-# Qtest.load_questionaire_csv( csv_test)
-# Qtest.generate_questionaire()
+"""
+Testing with reduced questions
+"""
+csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
+Qtest = Questionaire()
+Qtest.load_questionaire_csv( csv_test)
+Qtest.generate_questionaire()
 
 
-# ans = np.ones(len(Qtest.csv.index))
-# all_true = Qtest.evaluate_questionaire(ans)
+ans = [0,1,0]#np.ones(len(Qtest.csv.index))
+all_true = Qtest.evaluate_questionaire(ans)
 
-# ans = np.zeros(len(Qtest.csv.index))
-# all_false = Qtest.evaluate_questionaire(ans)
+Qtest.what_if_test(.9,.9)
+
+
+ans = np.zeros(len(Qtest.csv.index))
+all_false = Qtest.evaluate_questionaire(ans)
 
 
 
