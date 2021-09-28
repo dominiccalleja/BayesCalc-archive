@@ -162,27 +162,45 @@ class Questionaire(Test):
 
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
-            if inp:
-                ppv = self.question_dict[qId0].yes(PPV)
-                ans = 'yes'
-            elif not inp:
-                ppv = self.question_dict[qId0].no(PPV)
-                ans = 'no'
-            else:
-                ppv = self.question_dict[qId0].dont_know(PPV)
-                ans = 'dont know'
+            PPV = self.answer_question(qId0,inp,PPV)
+        self.final_ppv = PPV
+            # if inp:
+            #     ppv = self.question_dict[qId0].yes(PPV)
+            #     ans = 'yes'
+            # elif not inp:
+            #     ppv = self.question_dict[qId0].no(PPV)
+            #     ans = 'no'
+            # else:
+            #     ppv = self.question_dict[qId0].dont_know(PPV)
+            #     ans = 'dont know'
             
-            if self._verbose:
-                print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
-                    self.question_dict[qId0].get_question(), ans, ppv))
+            # if self._verbose:
+            #     print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
+            #         self.question_dict[qId0].get_question(), ans, ppv))
 
-            if i == self.get_N_questions()-1:
-                self.final_ppv = ppv
-                return self.final_ppv
-            
-            qId1 = list(self.question_dict.keys())[i+1]
-            PPV = ppv 
+            # if i == self.get_N_questions()-1:
+            #     self.final_ppv = ppv
+            #     return self.final_ppv            
+            # qId1 = list(self.question_dict.keys())[i+1]
             #self.question_dict[qId1]._inherit_PPV(ppv) 
+
+    def answer_question(self,QID, answer, PPV):
+        if answer:
+            ppv = self.question_dict[QID].yes(PPV)
+            ans = 'yes'
+        elif not answer:
+            ppv = self.question_dict[QID].no(PPV)
+            ans = 'no'
+        else:
+            ppv = self.question_dict[QID].dont_know(PPV)
+            ans = 'dont know'
+        return ppv
+
+    # def 
+    #     if not hasattr(self,'inc_question_ind'):
+    #         self.inc_question_ind = 0
+            
+        
 
     def get_final_ppv(self):
         if not hasattr(self, 'final_ppv'):
@@ -235,6 +253,41 @@ if __name__ == '__main__':
     import numpy as np
 
 
+    print(7*'#' +'TESTING GCA APP' + 7*'#')
+
+    Q = Questionaire()
+    Q._verbose = False
+    Q.generate_questionaire()
+    len(Q.csv.index.values)
+    len(Q.question_dict.keys())
+
+    print('All True \n\n')
+    ans = np.ones(len(Q.csv.index))
+    all_true = Q.evaluate_questionaire(ans)
+    Q.what_if_test(.9,.9)
+
+
+    print('\n\nAll False')
+    time.sleep(10)
+    ans = np.zeros(len(Q.csv.index))
+    all_true = Q.evaluate_questionaire(ans)
+    Q.what_if_test(.9,.9)
+
+
+    print('All dont know \n\n')
+    time.sleep(10)
+    ans = np.ones(len(Q.csv.index))*2
+    all_maybe = Q.evaluate_questionaire(ans)
+    Q.what_if_test(.9,.9)
+
+    print('Random \n\n')
+    time.sleep(10)
+    ans = np.random.randint(0,2,len(Q.csv.index))
+    all_random = Q.evaluate_questionaire(ans)
+    Q.what_if_test(.9,.9)
+
+
+
     csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
     Qtest = Questionaire()
     Qtest.prevelence = 0.01
@@ -248,13 +301,7 @@ if __name__ == '__main__':
     Qtest.what_if_test(.9,.9)
     
     
-    # Q = Questionaire()
-    # Q.generate_questionaire()
-    # len(Q.csv.index.values)
-    # len(Q.question_dict.keys())
 
-    # ans = np.ones(len(Q.csv.index))
-    # Q.evaluate_questionaire(ans)
 
 
     # IA = ICON_ARRAY(killed = 10,ill=240)
