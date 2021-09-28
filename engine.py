@@ -266,26 +266,26 @@ if __name__ == '__main__':
     len(Q.csv.index.values)
     len(Q.question_dict.keys())
 
-    print('All True \n\n')
+    print('\n\n All True')
     ans = np.ones(len(Q.csv.index))
     all_true = Q.evaluate_questionaire(ans)
     Q.what_if_test(.9,.9)
 
 
-    print('\n\nAll False')
+    print('\n\n All False')
     time.sleep(10)
     ans = np.zeros(len(Q.csv.index))
     all_true = Q.evaluate_questionaire(ans)
     Q.what_if_test(.9,.9)
 
 
-    print('All dont know \n\n')
+    print('\n\nAll dont know')
     time.sleep(10)
     ans = np.ones(len(Q.csv.index))*2
     all_maybe = Q.evaluate_questionaire(ans)
     Q.what_if_test(.9,.9)
 
-    print('Random \n\n')
+    print('\n\nRandom')
     time.sleep(10)
     ans = np.random.randint(0,2,len(Q.csv.index))
     all_random = Q.evaluate_questionaire(ans)
