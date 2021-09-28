@@ -21,7 +21,8 @@ class Question:
     option_type = 'DEFAULT'
     
     dfi = Interval([1, 1]) #default_interval
-    PPV = Interval(0.5)
+    PPV = Interval(0.01)
+
     def __init__(self, PLR, NLR):
         self.PLR = Interval(PLR)
         self.NLR = Interval(NLR)
@@ -68,20 +69,21 @@ class Question:
 class Questionaire:
     default_csv_file = join(home,default_csv_file)
     _verbose = True
+    PPV, prevelence = 0.5
+
     def __init__(self):
         print('Initialising with the default questionaire: \n \t{}'.format(self.default_csv_file))
         self.load_questionaire_csv(self.default_csv_file)
 
     def load_questionaire_csv(self,csv_file):
-        if csv_file.split()[-1] == 'csv':
+        if csv_file.split('.')[-1] == 'csv':
             self.csv = pd.read_csv(csv_file, index_col=[0])
-        elif csv_file.split()[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
+        elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
             self.csv = pd.read_csv(csv_file, index_col=[0])
 
     def generate_questionaire(self):
 
         for i in self.csv.index:
-            
             qid = self.csv.loc[i]['Qid']
             question = self.csv.loc[i]['Question']
             PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
@@ -105,13 +107,15 @@ class Questionaire:
         self.question_dict[qId]._add_question(question)
 
     def evaluate_questionaire(self, inputs):
+        
+        self.question_dict[qId0]
 
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
-            if inp == 1:
+            if inp:
                 ppv = self.question_dict[qId0].yes()
                 ans = 'yes'
-            elif inp == 0:
+            elif not inp:
                 ppv = self.question_dict[qId0].no()
                 ans = 'no'
             else:
@@ -208,7 +212,7 @@ Q.generate_questionaire()
 len(Q.csv.index.values)
 len(Q.question_dict.keys())
 
-ans = np.zeros(len(Q.csv.index))
+ans = np.ones(len(Q.csv.index))
 Q.evaluate_questionaire(ans)
 
 
@@ -216,6 +220,23 @@ IA = ICON_ARRAY(killed = 10,ill=240)
 IA.scale = 5
 IA.plot(s=90)
 
+
+
+
+"""
+Testing with reduced questions
+"""
+csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
+Qtest = Questionaire()
+Qtest.load_questionaire_csv( csv_test)
+Qtest.generate_questionaire()
+
+
+ans = np.ones(len(Qtest.csv.index))
+all_true = Qtest.evaluate_questionaire(ans)
+
+ans = np.ones(len(Qtest.csv.index))
+all_false = Qtest.evaluate_questionaire(ans)
 
 
 
