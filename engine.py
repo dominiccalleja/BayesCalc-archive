@@ -206,6 +206,8 @@ class Questionaire(Test):
         if self.inc_question_ind == len(list(self.question_dict.keys()))-1:
             self.final_ppv = self._increment_PPV
         
+        self.inc_question_ind +=1
+        
 
     def get_final_ppv(self):
         if not hasattr(self, 'final_ppv'):
