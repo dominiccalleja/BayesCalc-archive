@@ -163,8 +163,6 @@ class Questionaire(Test):
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
             PPV = self.answer_question(qId0,inp,PPV)
-
-
             if self._verbose:
                 print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
                     self.question_dict[qId0].get_question(), inp, PPV))
@@ -203,14 +201,21 @@ class Questionaire(Test):
         if not hasattr(self,'inc_question_ind'):
             self.inc_question_ind = 0
             self._increment_PPV = self.prevelence
+
         QId = list(self.question_dict.keys())[self.inc_question_ind]
         self._increment_PPV = self.answer_question(QId, answer, self._increment_PPV)
         
         if self.inc_question_ind == len(list(self.question_dict.keys()))-1:
-            self.final_ppv = self._increment_PPV
-        
+            self.final_ppv = self._increment_PPV    
         self.inc_question_ind +=1
-        
+
+    def get_next_symptom(self):
+        if not hasattr(self,'inc_question_ind'):
+            quest = 0
+        else:
+            quest =self.inc_question_ind
+        QId = list(self.question_dict.keys())[self.inc_question_ind]
+        return self.question_dict[QId].question_text
 
     def get_final_ppv(self):
         if not hasattr(self, 'final_ppv'):
