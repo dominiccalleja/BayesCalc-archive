@@ -69,7 +69,7 @@ class Question:
 class Questionaire:
     default_csv_file = join(home,default_csv_file)
     _verbose = True
-    PPV, prevelence = 0.5
+    PPV = prevelence = 0.5
 
     def __init__(self):
         print('Initialising with the default questionaire: \n \t{}'.format(self.default_csv_file))
