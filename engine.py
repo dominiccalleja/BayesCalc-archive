@@ -44,14 +44,17 @@ class Question:
         self.PLR = Interval(PLR)
         self.NLR = Interval(NLR)
 
-
         self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
     
+    def __repr__(self):
+        return 'Question {}:  {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.question_number, self.PLR,self.NLR)
+
     def _inherit_PPV(self,PPV):
         self.PPV = Interval(PPV)
 
-    def _add_question(self, question):
+    def _add_question(self, question, question_number = ''):
         self.question_text = question
+        self.question_number = question_number
 
     def get_question(self):
         return self.question_text
@@ -82,7 +85,7 @@ class Question:
     def misc_answer(self,**predAnswer):
         # first check key is in options
         # then compoute 
-        return self
+        return print('TO DO')
 
 class Test(Question):
 
