@@ -279,7 +279,7 @@ if __name__ == '__main__':
 
     Q.generate_questionaire()
     Q.prevelence = 0.1
-    print(list(Q.csv['Question']))
+    print(list(Q.csv['dependant']))
 #     Q = Questionaire()
 #     Q._verbose = False
 #     Q.generate_questionaire()
