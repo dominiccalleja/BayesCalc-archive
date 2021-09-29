@@ -28,12 +28,12 @@ class Start(Resource):
         json_data = request.get_json()
         ppv = json_data['ppv']
         
-        if '[' in ppv:
-            ppv = pba.I(ppv.replace('[','').replace(']').split(','))
+        if '[' in str(ppv):
+            ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
         else:
             ppv = float(ppv)
             
-        Q.load_questionaire_csv('test_3_inputs.csv')
+        Q.load_questionaire_csv('default_question_library.csv')
         Q.generate_questionaire()
         Q.prevelence = ppv
         if hasattr(Q,'inc_question_ind'):
