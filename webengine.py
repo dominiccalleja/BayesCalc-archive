@@ -7,6 +7,7 @@ CORS(app)
 
 import plotly.express as px
 import pandas as pd
+from math import floor, ceil
 
 from engine import *
 Q = Questionaire()
@@ -31,35 +32,15 @@ class Start(Resource):
             Q.inc_question_ind = 0
             Q._increment_PPV = ppv
 
-        return {'symptom': Q.get_next_symptom()}
+        return {'questions': list(Q.csv['Question'])}
+
+class Submit(Resource):
+    def post(self):
+        json_data = request.get_json()
+        answers = json_data['answers']
+        Q.evaluate_questionaire(answers)
+        return {'ppv': '[%.3f,%.3f]'%(Q.final_ppv.left,Q.final_ppv.right)}
     
-class Yes(Resource):
-    def post(self):
-
-        Q.answer_next_question(True)
-        return {
-            'ppv': str(Q._increment_PPV),
-            'symptom': Q.get_next_symptom()
-        }
-        
-class No(Resource):
-    def post(self):
-
-        Q.answer_next_question(False)
-        return {
-            'ppv': str(Q._increment_PPV),
-            'symptom': Q.get_next_symptom()
-        }
-        
-class Dunno(Resource):
-    def post(self):
-
-        Q.answer_next_question(2)
-        return {
-            'ppv': str(Q._increment_PPV),
-            'symptom': Q.get_next_symptom()
-        }
-        
 def print_fact_array(ppv: Interval):
     #!TODO: make it work for other sizes
     x = [i for i in range(10) for j in range(10)]
@@ -82,14 +63,31 @@ def print_fact_array(ppv: Interval):
     
 class Plot(Resource):
     def post(self):
+        #!TODO: make it work for other sizes
+        x = [i for i in range(10) for j in range(10)]
+        y = [j for i in range(10) for j in range(10)]
 
+        N = len(x)
+        red_stop = floor(N*Q.final_ppv.left)
+        orange_stop = ceil(N*Q.final_ppv.right)
+        
+        red_x = x[0:red_stop]
+        red_y = y[0:red_stop]
+        orange_x = x[red_stop+1:orange_stop]
+        orange_y = y[red_stop+1:orange_stop]    
+        green_x = x[orange_stop:]
+        green_y = y[orange_stop:]
+        print(1)
         return {
-            'plot': print_fact_array(Q._increment_PPV)
+            'red_x' : red_x,
+            'red_y' : red_y,
+            'orange_x' : orange_x,
+            'orange_y' : orange_y,
+            'green_x' : green_x,
+            'green_y' : green_y,
         }     
 
-api.add_resource(Yes, '/Yes')
-api.add_resource(No, '/No')
-api.add_resource(Dunno, '/Dunno')
+api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
 api.add_resource(Plot,'/Plot')
 if __name__ == '__main__':

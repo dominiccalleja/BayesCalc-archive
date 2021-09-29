@@ -3,7 +3,7 @@ import numpy as np
 from pba import Interval
 import plotly.express as px
 import pandas as pd
-
+from math import floor, ceil
 # class ICON_ARRAY:
 
 #     out_of = 10000
@@ -58,19 +58,16 @@ def print_fact_array(ppv: Interval):
     y = [j for i in range(10) for j in range(10)]
 
     N = len(x)
-    col = []
-    for i in range(N):
-        if i/N < ppv.left:
-            col.append('sick')
-        elif i/N < ppv.right:
-            col.append('dunno')
-        else:
-            col.append('well')
+    red_stop = floor(N*ppv.left)
+    orange_stop = ceil(N*ppv.right)
     
-
-    fig = px.scatter(pd.DataFrame({'x':x,'y':y,'col':col}), x='x',y='y',color = 'col')
-    fig.update_traces(marker=dict(size=12))
-    # print(fig.to_html(full_html=False), file = open('p.html','w'))
+    red_x = x[0:red_stop]
+    red_y = x[0:red_stop]
+    orange_x = x[red_stop:orange_stop]
+    orange_y = x[red_stop:orange_stop]    
+    green_x = x[orange_stop:]
+    green_y = x[orange_stop:]
+    
     
 if __name__ == '__main__':
     print_fact_array(Interval(0.45,0.55))
