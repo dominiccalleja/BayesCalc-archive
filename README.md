@@ -11,6 +11,9 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7432275/
 TODO: 
 - BUG ---- DONT KNOW method is returning weird answers
 
+SUGGESTIONS:
+- When running the 'what-if' tests, it makes no sense to say that "A negative test would give the patient a PPV of...", since it's a negative test. It can't have a PPV. We should really report the NPV, as this is needed to help exclude GCA.
+
 
 [FIXED]- setting all to True is obvs wrong = 1.2 right now 
 [FIXED]- BUG: seems there is a bug. there is a longer csv.index than number of questions. Need to check and figure out why
