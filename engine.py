@@ -273,8 +273,10 @@ if __name__ == '__main__':
 
     print(7*'#' +'TESTING GCA APP' + 7*'#')
     Q = Questionaire()
+
     Q._verbose = False
     Q.load_questionaire_csv('test_3_inputs.csv')
+
     Q.generate_questionaire()
     Q.prevelence = 0.1
     print(list(Q.csv['Question']))
@@ -283,6 +285,7 @@ if __name__ == '__main__':
 #     Q.generate_questionaire()
 #     len(Q.csv.index.values)
 #     len(Q.question_dict.keys())
+
 
 #     print('\n\n All True')
 #     ans = np.ones(len(Q.csv.index))
@@ -295,6 +298,7 @@ if __name__ == '__main__':
 #     ans = np.zeros(len(Q.csv.index))
 #     all_true = Q.evaluate_questionaire(ans)
 #     Q.what_if_test(.9,.9)
+
 
 
 #     print('\n\nAll dont know')
