@@ -1,4 +1,6 @@
-,Qid,Question,PLR0,PLR1,NLR0,NLR1
-0,1000,Headache,5.2,5.2,0.7,0.7
-1,1001,Temperature,5.40,5.40,1.3,1.3
-2,1002,Cough,.60,.60,1.3,1.3
+Qid,Question,PLR0,PLR1,NLR0,NLR1
+1000,Headache,5.2,5.2,0.7,0.7
+1001,Headache worse in morning?,7.5,7.5,0.4,0.4
+2000,Temperature,5.4,5.4,1.3,1.3
+3000,Cough,0.6,0.6,1.3,1.3
+3001,Dry Cough,0.6,0.6,2,2

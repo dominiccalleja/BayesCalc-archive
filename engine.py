@@ -3,7 +3,6 @@ from posixpath import join
 
 import pandas as pd
 import time
-#from pba import divideIntervals ,subtractIntervals ,multiplyIntervals ,addIntervals
 
 from pba import Interval
 
@@ -17,7 +16,7 @@ try:
 except:
     home = Path.Path('__file__').parent
 
-default_csv_file = 'default_question_library.csv'
+default_csv_file = 'test_3_inputs.csv'
 
 
 class Question:
@@ -127,9 +126,9 @@ class Questionaire(Test):
 
     def load_questionaire_csv(self,csv_file):
         if csv_file.split('.')[-1] == 'csv':
-            self.csv = pd.read_csv(csv_file, index_col=[0])
+            self.csv = pd.read_csv(csv_file, index_col=None)
         elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
-            self.csv = pd.read_csv(csv_file, index_col=[0])
+            self.csv = pd.read_csv(csv_file, index_col=None)
 
     def generate_questionaire(self):
 
@@ -138,7 +137,7 @@ class Questionaire(Test):
             question = self.csv.loc[i]['Question']
             PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
             NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-            self._init_question(i,question,PLR,NLR)
+            self._init_question(i,question,PLR,NLR)      
             if self._verbose:
                 print('Question {} - {} [{}]'.format(i,question, qid))
 
@@ -186,15 +185,17 @@ class Questionaire(Test):
             #self.question_dict[qId1]._inherit_PPV(ppv) 
 
     def answer_question(self,QID, answer, PPV):
-        if answer:
+        if answer == 1:
             ppv = self.question_dict[QID].yes(PPV)
             ans = 'yes'
-        elif not answer:
+        elif answer == 0:
             ppv = self.question_dict[QID].no(PPV)
             ans = 'no'
-        else:
+        elif answer == 2:
             ppv = self.question_dict[QID].dont_know(PPV)
             ans = 'dont know'
+        else: #question skipped
+            ppv = PPV
         return ppv
 
     def answer_next_question(self,answer): 
@@ -214,6 +215,8 @@ class Questionaire(Test):
             quest = 0
         else:
             quest =self.inc_question_ind
+        if quest == len(self.question_dict.keys()):
+            return "__END__"
         QId = list(self.question_dict.keys())[quest]
         return self.question_dict[QId].question_text
 
@@ -269,125 +272,131 @@ if __name__ == '__main__':
 
 
     print(7*'#' +'TESTING GCA APP' + 7*'#')
-
     Q = Questionaire()
-    Q._verbose = True
+
+    Q._verbose = False
+    Q.load_questionaire_csv('test_3_inputs.csv')
+
     Q.generate_questionaire()
-    len(Q.csv.index.values)
-    len(Q.question_dict.keys())
-
-    ### Junior Doc Answers ###
-    answer = [1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,1,1,1,0,0,1,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,1,0,0,1,0,0,0]
-    all_true = Q.evaluate_questionaire(answer)
-
-    print('\n\n All True')
-    ans = np.ones(len(Q.csv.index))
-    all_true = Q.evaluate_questionaire(ans)
-    Q.what_if_test(.9,.9)
-
-    print('\n\n All False')
-    time.sleep(10)
-    ans = np.zeros(len(Q.csv.index))
-    all_true = Q.evaluate_questionaire(ans)
-    Q.what_if_test(.9,.9)
+    Q.prevelence = 0.1
+    print(list(Q.csv['Question']))
+#     Q = Questionaire()
+#     Q._verbose = False
+#     Q.generate_questionaire()
+#     len(Q.csv.index.values)
+#     len(Q.question_dict.keys())
 
 
-    print('\n\nAll dont know')
-    time.sleep(10)
-    ans = np.ones(len(Q.csv.index))*2
-    all_maybe = Q.evaluate_questionaire(ans)
-    Q.what_if_test(.9,.9)
+#     print('\n\n All True')
+#     ans = np.ones(len(Q.csv.index))
+#     all_true = Q.evaluate_questionaire(ans)
+#     Q.what_if_test(.9,.9)
 
-    print('\n\nRandom')
-    time.sleep(10)
-    ans = np.random.randint(0,2,len(Q.csv.index))
-    all_random = Q.evaluate_questionaire(ans)
-    Q.what_if_test(.9,.9)
+
+#     print('\n\n All False')
+#     time.sleep(10)
+#     ans = np.zeros(len(Q.csv.index))
+#     all_true = Q.evaluate_questionaire(ans)
+#     Q.what_if_test(.9,.9)
 
 
 
-    csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
-    Qtest = Questionaire()
-    Qtest.prevelence = 0.01
-    Qtest.load_questionaire_csv( csv_test)
-    Qtest.generate_questionaire()
+#     print('\n\nAll dont know')
+#     time.sleep(10)
+#     ans = np.ones(len(Q.csv.index))*2
+#     all_maybe = Q.evaluate_questionaire(ans)
+#     Q.what_if_test(.9,.9)
+
+#     print('\n\nRandom')
+#     time.sleep(10)
+#     ans = np.random.randint(0,2,len(Q.csv.index))
+#     all_random = Q.evaluate_questionaire(ans)
+#     Q.what_if_test(.9,.9)
 
 
-    ans = [0,1,0]#np.ones(len(Qtest.csv.index))
-    all_true = Qtest.evaluate_questionaire(ans)
 
-    Qtest.what_if_test(.9,.9)
+#     csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
+#     Qtest = Questionaire()
+#     Qtest.prevelence = 0.01
+#     Qtest.load_questionaire_csv( csv_test)
+#     Qtest.generate_questionaire()
+
+
+#     ans = [0,1,0]#np.ones(len(Qtest.csv.index))
+#     all_true = Qtest.evaluate_questionaire(ans)
+
+#     Qtest.what_if_test(.9,.9)
     
     
 
 
 
-    # IA = ICON_ARRAY(killed = 10,ill=240)
-    # IA.scale = 5
-    # IA.plot(s=90)
+#     # IA = ICON_ARRAY(killed = 10,ill=240)
+#     # IA.scale = 5
+#     # IA.plot(s=90)
 
 
 
 
-"""
-Testing with reduced questions
-"""
+# """
+# Testing with reduced questions
+# """
 
 
 
-# ans = np.zeros(len(Qtest.csv.index))
-# all_false = Qtest.evaluate_questionaire(ans)
+# # ans = np.zeros(len(Qtest.csv.index))
+# # all_false = Qtest.evaluate_questionaire(ans)
 
 
 
 
 
-# def computePrevelanceModel(gen, ag):
+# # def computePrevelanceModel(gen, ag):
 
-#         from pba import linear_interpolate as li
+# #         from pba import linear_interpolate as li
 
-#         male_age_prev = {'Age': [50, 60, 70, 80, 90],
-#                         'Prevelance_Lower': [46/100000, 46/100000, 90/100000, 275/100000, 600/100000],
-#                         'Prevelance_Upper': [156/100000, 160/100000, 170/100000, 450/100000, 700/100000]}
+# #         male_age_prev = {'Age': [50, 60, 70, 80, 90],
+# #                         'Prevelance_Lower': [46/100000, 46/100000, 90/100000, 275/100000, 600/100000],
+# #                         'Prevelance_Upper': [156/100000, 160/100000, 170/100000, 450/100000, 700/100000]}
 
-#         female_age_prev = {'Age': [50, 60, 70, 80, 90],
-#                         'Prevelance_Lower': [46/100000, 46/100000, 250/100000, 1000/100000, 1700/100000],
-#                            'Prevelance_Upper': [156/100000, 160/100000, 300/100000, 1200/100000, 1900/100000]}
+# #         female_age_prev = {'Age': [50, 60, 70, 80, 90],
+# #                         'Prevelance_Lower': [46/100000, 46/100000, 250/100000, 1000/100000, 1700/100000],
+# #                            'Prevelance_Upper': [156/100000, 160/100000, 300/100000, 1200/100000, 1900/100000]}
 
-#         if (gen == 'male' and ag < 50):
-#             prev = [0.001, 0.001]
+# #         if (gen == 'male' and ag < 50):
+# #             prev = [0.001, 0.001]
 
-#         elif (gen == 'male' and ag <= 90):
-#             prev_lower = li(male_age_prev['Age'],
-#                             male_age_prev['Prevelance_Lower'], ag)
-#             prev_upper = li(male_age_prev['Age'],
-#                             male_age_prev['Prevelance_Upper'], ag)
-#             prev = [prev_lower, prev_upper]
+# #         elif (gen == 'male' and ag <= 90):
+# #             prev_lower = li(male_age_prev['Age'],
+# #                             male_age_prev['Prevelance_Lower'], ag)
+# #             prev_upper = li(male_age_prev['Age'],
+# #                             male_age_prev['Prevelance_Upper'], ag)
+# #             prev = [prev_lower, prev_upper]
 
-#         elif (gen == 'male' and ag > 90):
-#             prev_lower = li(male_age_prev['Age'],
-#                             male_age_prev['Prevelance_Lower'], 90)
-#             prev_upper = li(male_age_prev['Age'],
-#                             male_age_prev['Prevelance_Upper'], 90)
-#             prev = [prev_lower, prev_upper]
+# #         elif (gen == 'male' and ag > 90):
+# #             prev_lower = li(male_age_prev['Age'],
+# #                             male_age_prev['Prevelance_Lower'], 90)
+# #             prev_upper = li(male_age_prev['Age'],
+# #                             male_age_prev['Prevelance_Upper'], 90)
+# #             prev = [prev_lower, prev_upper]
 
-#         if (gen == 'female' and ag <= 50):
-#             prev = [0.001, 0.001]
+# #         if (gen == 'female' and ag <= 50):
+# #             prev = [0.001, 0.001]
 
-#         elif (gen == 'female' and ag <= 90):
-#             prev_lower = li(
-#                 female_age_prev['Age'], female_age_prev['Prevelance_Lower'], ag)
-#             prev_upper = li(
-#                 female_age_prev['Age'], female_age_prev['Prevelance_Upper'], ag)
-#             prev = [prev_lower, prev_upper]
+# #         elif (gen == 'female' and ag <= 90):
+# #             prev_lower = li(
+# #                 female_age_prev['Age'], female_age_prev['Prevelance_Lower'], ag)
+# #             prev_upper = li(
+# #                 female_age_prev['Age'], female_age_prev['Prevelance_Upper'], ag)
+# #             prev = [prev_lower, prev_upper]
 
-#         elif (gen == 'female' and ag > 90):
-#             prev_lower = li(
-#                 female_age_prev['Age'], female_age_prev['Prevelance_Lower'], 90)
-#             prev_upper = li(
-#                 female_age_prev['Age'], female_age_prev['Prevelance_Upper'], 90)
-#             prev = [prev_lower, prev_upper]
+# #         elif (gen == 'female' and ag > 90):
+# #             prev_lower = li(
+# #                 female_age_prev['Age'], female_age_prev['Prevelance_Lower'], 90)
+# #             prev_upper = li(
+# #                 female_age_prev['Age'], female_age_prev['Prevelance_Upper'], 90)
+# #             prev = [prev_lower, prev_upper]
 
-#         return prev
-#     # compute prevelance from gender and age
-#     vprev1 = computePrevelanceModel(gender, age)
+# #         return prev
+# #     # compute prevelance from gender and age
+# #     vprev1 = computePrevelanceModel(gender, age)
