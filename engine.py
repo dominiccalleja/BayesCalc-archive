@@ -214,6 +214,8 @@ class Questionaire(Test):
             quest = 0
         else:
             quest =self.inc_question_ind
+        if quest == len(self.question_dict.keys()):
+            return "__END__"
         QId = list(self.question_dict.keys())[quest]
         return self.question_dict[QId].question_text
 
