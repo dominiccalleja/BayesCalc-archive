@@ -7,9 +7,11 @@ CORS(app)
 
 import plotly.express as px
 import pandas as pd
-from math import floor, ceil
-
+from math import floor
+import pba
 from engine import *
+
+
 Q = Questionaire()
 Q._verbose = False
 # Q.generate_questionaire()
@@ -24,7 +26,13 @@ Q._verbose = False
 class Start(Resource):
     def post(self):
         json_data = request.get_json()
-        ppv = float(json_data['ppv'])
+        ppv = json_data['ppv']
+        
+        if '[' in ppv:
+            ppv = pba.I(ppv.replace('[','').replace(']').split(','))
+        else:
+            ppv = float(ppv)
+            
         Q.load_questionaire_csv('test_3_inputs.csv')
         Q.generate_questionaire()
         Q.prevelence = ppv
