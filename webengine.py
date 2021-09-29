@@ -32,7 +32,11 @@ class Start(Resource):
             Q.inc_question_ind = 0
             Q._increment_PPV = ppv
 
-        return {'questions': list(Q.csv['Question'])}
+        return {
+            'Qid': list(Q.csv['Qid']),
+            'questions': list(Q.csv['Question']),
+            'dependant': list(Q.csv['dependant'].fillna(0))
+            }
 
 class Submit(Resource):
     def post(self):
