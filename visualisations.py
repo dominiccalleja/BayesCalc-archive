@@ -68,6 +68,8 @@ def print_fact_array(ppv: Interval):
     green_x = x[orange_stop:]
     green_y = x[orange_stop:]
     
+    plt.plot()
+    
     
 if __name__ == '__main__':
     print_fact_array(Interval(0.45,0.55))
