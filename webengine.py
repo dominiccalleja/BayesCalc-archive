@@ -23,6 +23,10 @@ Q._verbose = False
         
 #         return {'symptom': symptoms[i],'i': i+1}
 
+@app.route("/")
+def hello():
+    return "Hello World!"
+
 class Start(Resource):
     def post(self):
         json_data = request.get_json()
@@ -103,4 +107,4 @@ api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
 api.add_resource(Plot,'/Plot')
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run()
