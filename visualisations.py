@@ -5,7 +5,6 @@ import plotly.express as px
 import pandas as pd
 from math import floor, ceil
 # class ICON_ARRAY:
-
 #     out_of = 10000
 #     marker = 'o'
 #     n_rows = 50
