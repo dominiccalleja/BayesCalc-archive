@@ -14,7 +14,7 @@ from application.engine import *
 
 from io import StringIO
 
-default_table = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
+default_ = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
 1000,Headache,,5.2,5.2,0.7,0.7
 1001,Headache worse in morning?,1000,7.5,7.5,0.4,0.4
 2000,Temperature,,5.4,5.4,1.3,1.3
@@ -42,7 +42,10 @@ class Start(Resource):
     def post(self):
         json_data = request.get_json()
         ppv = json_data['ppv']
-        csv = StringIO(json_data['csv'])
+        if json_data['csv'] == "":
+            csv = default_
+        else:
+            csv = StringIO(json_data['csv'])
         
         if '[' in str(ppv):
             ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
