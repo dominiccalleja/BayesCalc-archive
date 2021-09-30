@@ -86,7 +86,7 @@ class Question:
     def dont_know(self,PPV):
         UB = compute_ppv(self.PLR, PPV)
         LB = compute_npv(self.NLR, PPV)
-        self.C_PPV = Interval([LB.left, UB.right])
+        self.C_PPV = Interval([LB.left, 1-UB.right])
         return self.C_PPV
 
     def misc_answer(self,**predAnswer):
