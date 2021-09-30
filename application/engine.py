@@ -9,14 +9,20 @@ from pba import Interval
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-
+from io import StringIO
 
 try: 
     home = Path.Path(__file__).parent
 except:
     home = Path.Path('__file__').parent
 
-default_csv_file = 'test_3_inputs.csv'
+default_csv_file = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
+1000,Headache,,5.2,5.2,0.7,0.7
+1001,Headache worse in morning?,1000,7.5,7.5,0.4,0.4
+2000,Temperature,,5.4,5.4,1.3,1.3
+3000,Cough,,0.6,0.6,1.3,1.3
+3001,Dry Cough,3000,0.6,0.6,2,2
+''')
 
 
 class Question:
@@ -85,7 +91,7 @@ class Question:
     def dont_know(self,PPV):
         UB = compute_ppv(self.PLR, PPV)
         LB = compute_npv(self.NLR, PPV)
-        self.C_PPV = Interval([LB.left, 1-UB.right])
+        self.C_PPV = Interval([LB.left, UB.right])
         return self.C_PPV
 
     def misc_answer(self,**predAnswer):
@@ -104,23 +110,20 @@ class Test(Question):
     def what_if(self):
 
         if_positive = self.yes(self._PPV_pretest)
-        if_negative = 1 - self.no(self._PPV_pretest)
+        if_negative = self.no(self._PPV_pretest)
 
         test_string = []
         test_string.append('Should you administer a test?')
         test_string.append( 'This patients has a current PPV of {}'.format(self._PPV_pretest))
-
         test_string.append('\n\t A positive test would give the patient a PPV of {}'.format(if_positive))
-        test_string.append('\n\t An incorrect diagnosis would be expected for 1 in every {} patients'.format(NNM(*LRtoSensSpec(self.PLR, self.NLR), if_positive)))
-        test_string.append('\n\n\t A negative test would give the patient an NPV of {}'.format(if_negative))
-        test_string.append('\n\t An incorrect diagnosis would be expected for 1 in every {} patients'.format(NNM(*LRtoSensSpec(self.PLR, self.NLR), if_negative)))
+        test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
     
         print(*test_string)
 
 
 
 class Questionaire(Test):
-    default_csv_file = join(home,default_csv_file)
+    default_csv_file = default_csv_file
     _verbose = True
     prevelence = 0.5
     def __init__(self):
@@ -128,10 +131,11 @@ class Questionaire(Test):
         self.load_questionaire_csv(self.default_csv_file)
 
     def load_questionaire_csv(self,csv_file):
-        if csv_file.split('.')[-1] == 'csv':
-            self.csv = pd.read_csv(csv_file, index_col=None)
-        elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
-            self.csv = pd.read_csv(csv_file, index_col=None)
+        self.csv = pd.read_csv(csv_file)
+        # if csv_file.split('.')[-1] == 'csv':
+        #     self.csv = pd.read_csv(csv_file, index_col=None)
+        # elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
+        #     self.csv = pd.read_csv(csv_file, index_col=None)
 
     def generate_questionaire(self):
 
@@ -237,37 +241,7 @@ class Questionaire(Test):
         super().__init__(sense, spec,self.final_ppv)
         self.what_if()
 
-def LRtoSensSpec(PLR, NLR):
-    specfunc = lambda LP, LN: (1-LP)/(LN-LP)
-    if any([isinstance(P, Interval) for P in [PLR, NLR]]):
-        PLR, NLR = Interval(PLR), Interval(NLR)
-        L = specfunc(PLR.left, NLR.right)
-        R = specfunc(PLR.right, NLR.left)
-        spec = Interval(L, R)
-        sens = Interval(PLR.left*(1-spec.left), PLR.right*(1-spec.right))
-    else:
-        spec = specfunc(PLR,  NLR)
-        sens = PLR*(1-spec)
-    return sens, spec
-    
-def Accuracy(sens, spec, prev):
-    Accfunc = lambda s, t, p: s*p+p*(1-t)
-    if any([isinstance(P, Interval) for P in [sens, spec, prev]]):
-        R = Accfunc(sens.right, spec.right, prev.left)
-        L = Accfunc(sens.left, spec.left, prev.right)
-        Acc = Interval(L, R)
-    else:
-        Acc = Accfunc(sens, spec, prev)
-    return Acc
 
-def Inaccuracy(sens, spec, prev):
-    return 1-Accuracy(sens, spec, prev)
-
-def NND(sens, spec, prev):
-    return 1/Accuracy(sens, spec, prev)
-
-def NNM(sens, spec, prev):
-    return 1/Inaccuracy(sens, spec, prev)
 
 
 def compute_ppv(LR,PPV):
@@ -279,25 +253,25 @@ def compute_npv(LR,NPV):
     C_PPV = 1 / (1 + (LR/((1/NPV)-1)))
     return C_PPV
 
-# def PPV(sens, spec, prev):
-#     if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
-#         A = Interval(sens*prev)
-#         B = Interval((1-spec)*(1-prev))
-#         L = A.left/(A.left+B.right)
-#         U = A.right/(A.right+B.left)
-#         return Interval(L, U)
-#     else:
-#         return (sens*prev)/(sens*prev+(1-spec)*(1-prev))
+def PPV(sens, spec, prev):
+    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
+        A = Interval(sens*prev)
+        B = Interval((1-spec)*(1-prev))
+        L = A.left/(A.left+B.right)
+        U = A.right/(A.right+B.left)
+        return Interval(L, U)
+    else:
+        return (sens*prev)/(sens*prev+(1-spec)*(1-prev))
 
-# def NPV(sens, spec, prev):
-#     if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
-#         A = Interval((1-sens)*prev)
-#         B = Interval(spec*(1-prev))
-#         L = B.left/(B.left+A.right)
-#         U = B.right/(A.left+B.right)
-#         return Interval(L, U)
-#     else:
-#         return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
+def NPV(sens, spec, prev):
+    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
+        A = Interval((1-sens)*prev)
+        B = Interval(spec*(1-prev))
+        L = B.left/(B.left+A.right)
+        U = B.right/(A.left+B.right)
+        return Interval(L, U)
+    else:
+        return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
 
 
 if __name__ == '__main__':
@@ -346,11 +320,7 @@ if __name__ == '__main__':
 #     all_random = Q.evaluate_questionaire(ans)
 #     Q.what_if_test(.9,.9)
 
-    print('\n\n Uninformative Test')
-    time.sleep(10)
-    ans = np.zeros(len(Q.csv.index))
-    all_true = Q.evaluate_questionaire(ans)
-    Q.what_if_test(.5,.5)
+
 
 #     csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
 #     Qtest = Questionaire()

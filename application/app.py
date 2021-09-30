@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
+
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
@@ -9,7 +10,17 @@ import plotly.express as px
 import pandas as pd
 from math import floor
 import pba
-from engine import *
+from application.engine import *
+
+from io import StringIO
+
+default_table = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
+1000,Headache,,5.2,5.2,0.7,0.7
+1001,Headache worse in morning?,1000,7.5,7.5,0.4,0.4
+2000,Temperature,,5.4,5.4,1.3,1.3
+3000,Cough,,0.6,0.6,1.3,1.3
+3001,Dry Cough,3000,0.6,0.6,2,2
+''')
 
 
 Q = Questionaire()
@@ -37,7 +48,7 @@ class Start(Resource):
         else:
             ppv = float(ppv)
             
-        Q.load_questionaire_csv('default_question_library.csv')
+        Q.load_questionaire_csv(default_table)
         Q.generate_questionaire()
         Q.prevelence = ppv
         if hasattr(Q,'inc_question_ind'):
@@ -107,4 +118,4 @@ api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
 api.add_resource(Plot,'/Plot')
 if __name__ == '__main__':
-    app.run(host = "138.253.13.221", debug=True, port = "5000")
+    app.run(debug=True)
