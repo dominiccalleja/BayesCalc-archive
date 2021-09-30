@@ -107,4 +107,4 @@ api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
 api.add_resource(Plot,'/Plot')
 if __name__ == '__main__':
-    app.run(port = "443")
+    app.run(port = "2000")
