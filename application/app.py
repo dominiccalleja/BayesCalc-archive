@@ -42,13 +42,14 @@ class Start(Resource):
     def post(self):
         json_data = request.get_json()
         ppv = json_data['ppv']
+        csv = StringIO(json_data['csv'])
         
         if '[' in str(ppv):
             ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
         else:
             ppv = float(ppv)
             
-        Q.load_questionaire_csv(default_table)
+        Q.load_questionaire_csv(csv)
         Q.generate_questionaire()
         Q.prevelence = ppv
         if hasattr(Q,'inc_question_ind'):
@@ -58,7 +59,7 @@ class Start(Resource):
         return {
             'Qid': list(Q.csv['Qid']),
             'questions': list(Q.csv['Question']),
-            'dependant': list(Q.csv['dependant'].fillna(0))
+            'dependant': list(Q.csv['Dependant'].fillna(0))
             }
 
 class Submit(Resource):
@@ -114,8 +115,14 @@ class Plot(Resource):
             'green_y' : green_y,
         }     
 
+class Print_pdf(Resource):
+    def post():
+        return {}
+    
 api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
 api.add_resource(Plot,'/Plot')
+api.add_resource(Print_pdf,'/Print_pdf')
+
 if __name__ == '__main__':
     app.run(debug=True)
