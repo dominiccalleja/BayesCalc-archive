@@ -14,13 +14,12 @@ from application.engine import *
 
 from io import StringIO
 
-default_ = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
-1000,Headache,,5.2,5.2,0.7,0.7
-1001,Headache worse in morning?,1000,7.5,7.5,0.4,0.4
-2000,Temperature,,5.4,5.4,1.3,1.3
-3000,Cough,,0.6,0.6,1.3,1.3
-3001,Dry Cough,3000,0.6,0.6,2,2
-''')
+default_ = StringIO('''Qid,Question,Dependant,Description,PLR0,PLR1,NLR0,NLR1
+1000,Headache,,hello,5.2,5.2,0.7,0.7
+1001,Headache worse in morning?,1000,,7.5,7.5,0.4,0.4
+2000,Temperature,,,5.4,5.4,1.3,1.3
+3000,Cough,,,0.6,0.6,1.3,1.3
+3001,Dry Cough,3000,,0.6,0.6,2,2''')
 
 
 Q = Questionaire()
@@ -58,11 +57,12 @@ class Start(Resource):
         if hasattr(Q,'inc_question_ind'):
             Q.inc_question_ind = 0
             Q._increment_PPV = ppv
-
+        print(Q.csv)
         return {
             'Qid': list(Q.csv['Qid']),
             'questions': list(Q.csv['Question']),
-            'dependant': list(Q.csv['Dependant'].fillna(0))
+            'dependant': list(Q.csv['Dependant'].fillna(0)),
+            'description': list(Q.csv['Description'].fillna(""))
             }
 
 class Submit(Resource):
@@ -118,14 +118,9 @@ class Plot(Resource):
             'green_y' : green_y,
         }     
 
-class Print_pdf(Resource):
-    def post():
-        return {}
-    
 api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
 api.add_resource(Plot,'/Plot')
-api.add_resource(Print_pdf,'/Print_pdf')
 
 if __name__ == '__main__':
     app.run(debug=True)
