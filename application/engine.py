@@ -273,6 +273,37 @@ def NPV(sens, spec, prev):
     else:
         return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
 
+def LRtoSensSpec(PLR, NLR):
+    specfunc = lambda LP, LN: (1-LP)/(LN-LP)
+    if any([isinstance(P, Interval) for P in [PLR, NLR]]):
+        PLR, NLR = Interval(PLR), Interval(NLR)
+        L = specfunc(PLR.left, NLR.right)
+        R = specfunc(PLR.right, NLR.left)
+        spec = Interval(L, R)
+        sens = Interval(PLR.left*(1-spec.left), PLR.right*(1-spec.right))
+    else:
+        spec = specfunc(PLR,  NLR)
+        sens = PLR*(1-spec)
+    return sens, spec
+    
+def Accuracy(sens, spec, prev):
+    Accfunc = lambda s, t, p: s*p+p*(1-t)
+    if any([isinstance(P, Interval) for P in [sens, spec, prev]]):
+        R = Accfunc(sens.right, spec.right, prev.left)
+        L = Accfunc(sens.left, spec.left, prev.right)
+        Acc = Interval(L, R)
+    else:
+        Acc = Accfunc(sens, spec, prev)
+    return Acc
+
+def Inaccuracy(sens, spec, prev):
+    return 1-Accuracy(sens, spec, prev)
+
+def NND(sens, spec, prev):
+    return 1/Accuracy(sens, spec, prev)
+
+def NNM(sens, spec, prev):
+    return 1/Inaccuracy(sens, spec, prev)
 
 if __name__ == '__main__':
     import numpy as np
