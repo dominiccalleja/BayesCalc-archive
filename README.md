@@ -19,6 +19,7 @@ SUGGESTIONS:
 [FIXED]- BUG: seems there is a bug. there is a longer csv.index than number of questions. Need to check and figure out why
 [COMPLETE]- check underlying pba funcitons [COMPLETE. Not using old version]
 
+Uchenna: Can you put an example script of how you run this app?
 
 - add the functionality to generate a JS script. 
 - add functionality to have 2 tiers of questions. Should run from something cleaver with the csv. Maybe grouped == 1 and a new class sub_question only invoked on a true at the previous tier.' 
