@@ -16,6 +16,9 @@ try:
 except:
     home = Path.Path('__file__').parent
 
+
+#default_csv_file = '/Users/dominiccalleja/GCA_App/default_questions.csv'
+
 default_csv_file = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
 1000,Headache,,5.2,5.2,0.7,0.7
 1001,Headache worse in morning?,1000,7.5,7.5,0.4,0.4
@@ -107,13 +110,16 @@ class Test(Question):
         super().__init__(sensitivity=sensitivity, specificity=sensitivity)
         self._PPV_pretest = PPV
     
-    def what_if(self):
+    def what_if(self,*test_name):
 
         if_positive = self.yes(self._PPV_pretest)
         if_negative = self.no(self._PPV_pretest)
 
         test_string = []
-        test_string.append('Should you administer a test?')
+        if test_name:
+            test_string.append('Should you administer a {} test?'.format(test_name))
+        else:
+            test_string.append('Should you administer a test?')
         test_string.append( 'This patients has a current PPV of {}'.format(self._PPV_pretest))
         test_string.append('\n\t A positive test would give the patient a PPV of {}'.format(if_positive))
         test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
@@ -131,11 +137,23 @@ class Questionaire(Test):
         self.load_questionaire_csv(self.default_csv_file)
 
     def load_questionaire_csv(self,csv_file):
-        self.csv = pd.read_csv(csv_file)
-        # if csv_file.split('.')[-1] == 'csv':
-        #     self.csv = pd.read_csv(csv_file, index_col=None)
-        # elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
-        #     self.csv = pd.read_csv(csv_file, index_col=None)
+        if Path.Path(csv_file).exists():
+            if csv_file.split('.')[-1] == 'csv':
+                self.csv = pd.read_csv(csv_file, index_col=0)
+            elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
+                self.csv = pd.read_excel(csv_file) # Probably wrong. Needs an option passing but I forget.
+        else:
+            self.csv = pd.read_csv(csv_file)
+        
+        self._seperate_tests()
+
+    def _seperate_tests(self):
+        # We assume the tests are seperated from other questions by the 'T' in the QID column
+        if any(self.csv['Qid'] =='T'):
+            idT = self.csv.index[self.csv['Qid']== 'T'][0]
+            # assume tests are the remaining rows of the table 
+            self.tests = self.csv.iloc[idT+1:,:]
+            self.csv = self.csv.drop(index = range(idT,len(self.csv.index.values)))
 
     def generate_questionaire(self):
 
@@ -240,6 +258,11 @@ class Questionaire(Test):
     def what_if_test(self,sense, spec):
         super().__init__(sense, spec,self.final_ppv)
         self.what_if()
+
+    def cycle_through_testing_options(self):
+        for T in self.tests:
+            
+
 
 
 
