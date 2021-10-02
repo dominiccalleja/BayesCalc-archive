@@ -12,7 +12,7 @@ TODO:
 - BUG ---- DONT KNOW method is returning weird answers
 
 SUGGESTIONS:
-- When running the 'what-if' tests, it makes no sense to say that "A negative test would give the patient a PPV of...", since it's a negative test. It can't have a PPV. We should really report the NPV, as this is needed to help exclude GCA.
+- When running the 'what-if' tests, it makes no sense to say that "A negative test would give the patient a PPV of...", since it's a negative test. It can't have a PPV. We should really report the NPV(I disagree you should give all values in PPV. 1-NPV is PPV), as this is needed to help exclude GCA.
 
 
 [FIXED]- setting all to True is obvs wrong = 1.2 right now 
