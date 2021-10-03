@@ -80,22 +80,25 @@ class Question:
         #### These answers are still a bloody mess. Need to split them up into more sensible methods too! 
             # Might even be an idea to stick them in their own class!!! 
 
-    def yes(self,PPV):
-        self.C_PPV = compute_ppv(self.PLR, PPV)
-        return self.C_PPV
+    @staticmethod
+    def yes(PLR,PPV):
+        C_PPV = compute_ppv(PLR, PPV)
+        return C_PPV
 
-    def no(self,PPV):
+    @staticmethod
+    def no(NLR,PPV):
         #C_PPV = compute_ppv(self.NLR, self.PPV)
-        C_PPV = compute_npv(self.NLR, PPV)
-        self.C_PPV = 1 - C_PPV
+        C_PPV = compute_npv(NLR, PPV)
+        C_PPV = 1 - C_PPV
         #self.
-        return self.C_PPV
+        return C_PPV
 
-    def dont_know(self,PPV):
-        UB = compute_ppv(self.PLR, PPV)
-        LB = compute_npv(self.NLR, PPV)
-        self.C_PPV = Interval([LB.left, UB.right])
-        return self.C_PPV
+    @staticmethod
+    def dont_know(PLR,NLR,PPV):
+        UB = compute_ppv(PLR, PPV)
+        LB = compute_npv(NLR, PPV)
+        C_PPV = Interval([LB.left, UB.right])
+        return C_PPV
 
     def misc_answer(self,**predAnswer):
         # first check key is in options
@@ -110,22 +113,29 @@ class Test(Question):
         super().__init__(sensitivity=sensitivity, specificity=sensitivity)
         self._PPV_pretest = PPV
     
-    def what_if(self,*test_name):
+    def what_if(self,):
 
-        if_positive = self.yes(self._PPV_pretest)
-        if_negative = self.no(self._PPV_pretest)
+        self.if_positive = self.yes(self.PLR,self._PPV_pretest)
+        self.if_negative = self.no(self.NLR,self._PPV_pretest)
 
+    def print_test_string(self,*test_name):
         test_string = []
         if test_name:
             test_string.append('Should you administer a {} test?'.format(test_name))
         else:
             test_string.append('Should you administer a test?')
         test_string.append( 'This patients has a current PPV of {}'.format(self._PPV_pretest))
-        test_string.append('\n\t A positive test would give the patient a PPV of {}'.format(if_positive))
-        test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
-    
+        test_string.append('\n\t A positive test would give the patient a PPV of {}'.format(self.if_positive))
+        test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(self.if_negative))
         print(*test_string)
+        self.test_string  =test_string 
+        return test_string
 
+    def get_what_if_results(self):
+        return [self.if_positive, self.if_negative]
+    
+    def __repr__(self):
+        return print(*test_string)
 
 
 class Questionaire(Test):
@@ -259,8 +269,11 @@ class Questionaire(Test):
         super().__init__(sense, spec,self.final_ppv)
         self.what_if()
 
-    def cycle_through_testing_options(self):
+    def compute_test_VOI(self):
+        possible_tests = {}
         for T in self.tests:
+            sense, spec = LRtoSensSpec(Interval([T['PLR0'],T['PLR1']]), Interval([T['NLR0'],T['NLR1']]))
+            possible_tests[T.Qid] = Test(sense,spec,self.final_ppv)
             
 
 
@@ -297,7 +310,7 @@ def NPV(sens, spec, prev):
         return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
 
 def LRtoSensSpec(PLR, NLR):
-    specfunc = lambda LP, LN: (1-LP)/(LN-LP)
+    def specfunc( LP, LN): return (1-LP)/(LN-LP)
     if any([isinstance(P, Interval) for P in [PLR, NLR]]):
         PLR, NLR = Interval(PLR), Interval(NLR)
         L = specfunc(PLR.left, NLR.right)
