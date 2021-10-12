@@ -14,24 +14,9 @@ from application.engine import *
 
 from io import StringIO
 
-default_ = StringIO('''Qid,Question,Dependant,Description,PLR0,PLR1,NLR0,NLR1
-1000,Headache,,hello,5.2,5.2,0.7,0.7
-1001,Headache worse in morning?,1000,,7.5,7.5,0.4,0.4
-2000,Temperature,,,5.4,5.4,1.3,1.3
-3000,Cough,,,0.6,0.6,1.3,1.3
-3001,Dry Cough,3000,,0.6,0.6,2,2''')
 
 
-Q = Questionaire()
-Q._verbose = False
-# Q.generate_questionaire()
-    
-# class Questions(Resource):
-#     def post(self):
-#         json_data = request.get_json()
-#         i = json_data['i']
-        
-#         return {'symptom': symptoms[i],'i': i+1}
+
 
 @app.route("/")
 def hello():
@@ -39,13 +24,19 @@ def hello():
 
 class Start(Resource):
     def post(self):
+        default_ = 'test_3_inputs.csv'
+        
+        
+        Q = Questionaire()
+        Q._verbose = False
         json_data = request.get_json()
         ppv = json_data['ppv']
         if json_data['csv'] == "":
             csv = default_
         else:
-            csv = StringIO(json_data['csv'])
-        
+            # csv = StringIO(json_data['csv'])
+            csv = default_
+            
         if '[' in str(ppv):
             ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
         else:
@@ -67,7 +58,28 @@ class Start(Resource):
 
 class Submit(Resource):
     def post(self):
+        default_ = 'test_3_inputs.csv'
+        
+        
+        Q = Questionaire()
+        Q._verbose = False
         json_data = request.get_json()
+        ppv = json_data['ppv']
+        if json_data['csv'] == "":
+            csv = default_
+        else:
+            # csv = StringIO(json_data['csv'])
+            csv = default_
+            
+        if '[' in str(ppv):
+            ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
+        else:
+            ppv = float(ppv)
+            
+        Q.load_questionaire_csv(csv)
+        Q.generate_questionaire()
+        Q.prevelence = ppv
+        # json_data = request.get_json()
         answers = json_data['answers']
         Q.evaluate_questionaire(answers)
         return {'ppv': '[%.3f,%.3f]'%(Q.final_ppv.left,Q.final_ppv.right)}

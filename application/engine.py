@@ -16,13 +16,13 @@ try:
 except:
     home = Path.Path('__file__').parent
 
-default_csv_file = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
-1000,Headache,,5.2,5.2,0.7,0.7
-1001,Headache worse in morning?,1000,7.5,7.5,0.4,0.4
-2000,Temperature,,5.4,5.4,1.3,1.3
-3000,Cough,,0.6,0.6,1.3,1.3
-3001,Dry Cough,3000,0.6,0.6,2,2
-''')
+# default_csv_file = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
+# 1000,Headache,,5.2,5.2,0.7,0.7
+# 1001,Headache worse in morning?,1000,7.5,7.5,0.4,0.4
+# 2000,Temperature,,5.4,5.4,1.3,1.3
+# 3000,Cough,,0.6,0.6,1.3,1.3
+# 3001,Dry Cough,3000,0.6,0.6,2,2
+# ''')
 
 
 class Question:
@@ -123,7 +123,7 @@ class Test(Question):
 
 
 class Questionaire(Test):
-    default_csv_file = default_csv_file
+    default_csv_file = 'test_3_inputs.csv'
     _verbose = True
     prevelence = 0.5
     def __init__(self):

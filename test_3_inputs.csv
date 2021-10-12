@@ -1,6 +1,6 @@
 Qid,Question,Dependant,Description,PLR0,PLR1,NLR0,NLR1
 1000,Headache,,A pain the patient feels inside their head,5.2,5.2,0.7,0.7
 1001,Worse in morning?,1000,Is the patients headache worse in the morning? ,7.5,7.5,0.4,0.4
-2000,Temperature,,Is the patients temperature greater than 37.5¡?,5.4,5.4,1.3,1.3
+2000,Temperature,,Is the patients temperature greater than 37.5C?,5.4,5.4,1.3,1.3
 3000,Cough,,"A cough is a sudden expulsion of air through the large breathing passages that can help clear them of fluids, irritants, foreign particles and microbes.",0.6,0.6,1.3,1.3
 3001,Dry Cough,3000,Coughing without discharging phlegm or mucus from the throat or lungs,0.6,0.6,2,2
