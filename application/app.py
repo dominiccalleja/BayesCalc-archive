@@ -31,11 +31,12 @@ class Start(Resource):
         Q._verbose = False
         json_data = request.get_json()
         ppv = json_data['ppv']
+        print(json_data['csv'])
         if json_data['csv'] == "":
             csv = default_
         else:
-            # csv = StringIO(json_data['csv'])
-            csv = default_
+            csv = StringIO(json_data['csv'])
+            # csv = default_
             
         if '[' in str(ppv):
             ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
