@@ -4,7 +4,7 @@ from posixpath import join
 import pandas as pd
 import time
 
-from pba import Interval
+from pba import Interval, sometimes, always
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -24,42 +24,7 @@ except:
 # 3001,Dry Cough,3000,0.6,0.6,2,2
 # ''')
 
-
-class Question:
-    option_type = 'DEFAULT'
-    
-    dfi = Interval([1, 1]) #default_interval
-    #use_sensitivity_specificity = False
-
-    def __init__(self, PLR=None, NLR=None, sensitivity=None, specificity=None):
-
-        #TODO fix the error handling for the weird combos of different stats
-        if PLR is not None:
-            assert NLR is not None
-            assert sensitivity is None and specificity is None
-        else:
-            assert sensitivity is not None and specificity is not None
-            if specificity == 1:
-                specificity = .9999999
-                            
-            PLR = sensitivity/(1-specificity)
-            NLR = (1-sensitivity)/specificity
-        
-        self.PLR = Interval(PLR)
-        self.NLR = Interval(NLR)
-
-        self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
-
-    #     self._check_instanciation()
-    # def _check_instanciation(self):
-    #     if not hasattr(self,'PPV'):
-    #         PPV = Interval(0.01)
-    
-    def __repr__(self):
-        return 'Question {}:  {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.question_number, self.PLR,self.NLR)
-
-    # def _inherit_PPV(self,PPV):
-    #     self.PPV = Interval(PPV)
+class Question_Methods:
 
     def _add_question(self, question, question_number = ''):
         self.question_text = question
@@ -99,9 +64,156 @@ class Question:
         # then compoute 
         return print('TO DO')
 
+    def _add_section_header(self,header):
+        self.header = header
+    
+    def get_section_header(self):
+        if hasattr(self,'header'):
+            return header
+        else:
+            return 'Diagnosis Questions'
+
+    def __repr__(self):
+        return 'Question {}:  {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.question_number, self.PLR,self.NLR)
 
 
-class Test(Question):
+class Question(Question_Methods):
+    option_type = 'DEFAULT'
+    
+    dfi = Interval([1, 1]) #default_interval
+    #use_sensitivity_specificity = False
+
+    def __init__(self, PLR=None, NLR=None, sensitivity=None, specificity=None):
+
+        #TODO fix the error handling for the weird combos of different stats
+        if PLR is not None:
+            assert NLR is not None
+            assert sensitivity is None and specificity is None
+        else:
+            assert sensitivity is not None and specificity is not None
+            if specificity == 1:
+                specificity = .9999999
+                            
+            PLR = sensitivity/(1-specificity)
+            NLR = (1-sensitivity)/specificity
+        
+        self.PLR = Interval(PLR)
+        self.NLR = Interval(NLR)
+
+        self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
+        super().__init__()
+
+class Node(Question_Methods):
+    def __init__(self,threshold, PLR, NLR):
+        super().__init__()
+        self.threshold = threshold
+        #self.PPV = PPV
+        self.PLR = PLR 
+        self.NLR = NLR
+
+        self.left = None
+        self.right = None
+    
+    def __repr__(self):
+        return 'Threshold : {}'.format(self.threshold)
+
+    def less_than(self,PPV):
+        if self.left is None:
+            return self.no(PPV)
+        else:
+            return self.left
+    
+    def more_than(self,PPV):
+        if self.right is None:
+            return self.yes(PPV)
+        else:
+            return self.right
+
+
+class BTree:
+    def __init__(self):
+        self.root = None
+        #self.PPV = PPV
+
+    def get_root(self):
+        return self.root
+    
+    def add(self,threshold, PLR, NLR):
+        PLR = Interval(PLR)
+        NLR = Interval(NLR)
+        if self.root is None:
+            self.root = Node(threshold, PLR, NLR)
+        else:
+            self._add(threshold,self.root, PLR, NLR)
+
+    def _add(self, threshold, node, PLR, NLR):
+        if threshold < node.threshold:
+            if node.left is not None:
+                self._add(threshold, node.left, PLR, NLR)
+            else:
+                node.left = Node(threshold, PLR, NLR)
+        else:
+            if node.right is not None:
+                self._add(threshold, node.right, PLR, NLR)
+            else:
+                node.right = Node(threshold, PLR, NLR)
+    
+    @staticmethod
+    def _return_less(Node,PPV):
+        return Node.less_than(PPV)
+
+    @staticmethod
+    def _return_more(Node,PPV):
+        return Node.more_than(PPV)
+        
+    def compute_tree(self, value, PPV):
+
+        node = self.get_root()
+        while isinstance(node,Node):
+            node = compute_node(node, value, PPV)
+        return node
+    
+def compute_node(tmp, value, PPV):
+    if hasattr(tmp,'root'):
+        tmp = tmp.root 
+    if value < tmp.threshold:
+        tmp = tmp.less_than(PPV)
+    else:
+        tmp = tmp.more_than(PPV)
+    return tmp
+
+class Binarize:    
+    def __init__(self,thresholds,PLR, NLR):
+        self.thresholds = thresholds
+        self.PLR = PLR
+        self.NLR = NLR
+        try:
+            self.Nt = len(thresholds)
+        except:
+            self.Nt = 1
+    
+    def generate_tree(self):
+        New_Tree = BTree()
+        if self.Nt == 1:
+            New_Tree.add(self.thresholds,self.PLR,self.NLR)
+        else:   
+            for i in range(self.Nt):
+                New_Tree.add(self.thresholds[i],self.PLR[i],self.NLR[i])
+        self.Tree = New_Tree
+    
+    def get_tree(self):
+        return self.Tree
+    
+    def __repr__(self):
+        s0 = 3*'#' + 'BTree object for scalar inputs'+ 3*'#'+ '\n'
+        s0 +='\tNumber of thresholds : \t {}\n'.format(self.Nt)
+        s0 +='\tthresholds : \n\t {}\n'.format(self.thresholds)
+        s0 +='\tPLR : \n\t {}\n'.format(self.PLR)
+        s0 +='\tNLR : \n\t {}\n'.format(self.NLR)
+        return s0
+
+
+class Test(Question_Methods):
 
     def __init__(self, sensitivity, specificity, PPV):
         super().__init__(sensitivity=sensitivity, specificity=sensitivity)
@@ -119,7 +231,6 @@ class Test(Question):
         test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
     
         print(*test_string)
-
 
 
 class Questionaire(Test):
@@ -173,23 +284,6 @@ class Questionaire(Test):
                 print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
                     self.question_dict[qId0].get_question(), inp, PPV))
         self.final_ppv = PPV
-            # if inp:
-            #     ppv = self.question_dict[qId0].yes(PPV)
-            #     ans = 'yes'
-            # elif not inp:
-            #     ppv = self.question_dict[qId0].no(PPV)
-            #     ans = 'no'
-            # else:
-            #     ppv = self.question_dict[qId0].dont_know(PPV)
-            #     ans = 'dont know'
-            
-            
-
-            # if i == self.get_N_questions()-1:
-            #     self.final_ppv = ppv
-            #     return self.final_ppv            
-            # qId1 = list(self.question_dict.keys())[i+1]
-            #self.question_dict[qId1]._inherit_PPV(ppv) 
 
     def answer_question(self,QID, answer, PPV):
         if answer == 1:
@@ -311,13 +405,26 @@ if __name__ == '__main__':
 
     print(7*'#' +'TESTING GCA APP' + 7*'#')
     Q = Questionaire()
-
     Q._verbose = False
     Q.load_questionaire_csv('test_3_inputs.csv')
 
     Q.generate_questionaire()
     Q.prevelence = 0.1
     print(list(Q.csv['dependant']))
+
+    # Using the Btree
+    Tree = BTree()  # Pass PPV
+    Tree.add(10,[.9,.99],.8) # Pass Threshold, PPV, NPV 
+    Tree.add(20,.6,.2)# Pass Threshold, PPV, NPV
+    Tree.compute_tree(5000,.6)
+
+
+    BB = Binarize([0,1,2],[Interval(.5,.99),Interval(.4),Interval(.2)],[.1,.2,.3])
+    BB.generate_tree()
+    Tree = BB.get_tree()
+
+    Tree.compute_tree(1,.99)
+
 #     Q = Questionaire()
 #     Q._verbose = False
 #     Q.generate_questionaire()
