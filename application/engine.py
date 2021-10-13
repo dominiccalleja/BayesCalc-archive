@@ -1,5 +1,6 @@
 import pathlib as Path
 from posixpath import join
+import re
 
 import pandas as pd
 import time
@@ -41,7 +42,7 @@ class Test(Question_Methods):
 
 
 class Questionaire(Test):
-    default_csv_file = 'test_3_inputs.csv'
+    default_csv_file = str(home.parent)+'/test_3_inputs.csv'
     _verbose = True
     prevelence = 0.5
     def __init__(self):
@@ -56,15 +57,62 @@ class Questionaire(Test):
         #     self.csv = pd.read_csv(csv_file, index_col=None)
 
     def generate_questionaire(self):
+        self._check_existing_questions()
+        ### Remove this once we are all using the up to dat csv format
+        if [i for i in self.csv.columns if i == 'Qtype']:
+            self.__new_method_generate_questionaire()
+        else:
+            self.__deprecated_generate_questionaire()
 
+        #if self._verbose:
+        #    print('Question {} - {} [{}]'.format(i,question, qid))
+
+    ## Activate subsiquent with an option in generate questionaire! 
+    def compute_with_midpoint(self):
+        return 'TODO impliment to change the .csv to the midpoint'
+    
+    def compute_with_endpoint(self, right=True):
+        return 'TODO impliment to change the .csv to the endpoint'
+
+    def compute_with_mean(self):
+        return 'TODO impliment to change the .csv to the PLR/NLR variables'
+
+    def __new_method_generate_questionaire(self):
+        Qtype = self.csv.Qtype.values
+        for i in self.csv.index:
+            qid = self.csv.loc[i]['Qid']
+            if Qtype[i] == 'H':
+                header = self.csv.loc[i]['Question']
+
+            elif Qtype[i] == 'S':
+                Squestion = self.csv.loc[i]['Question']
+                j = i +1
+                PLRs = []
+                NLRs = []
+                thresholds = []
+                while Qtype[j] == 'SA':
+                    PLRs.append([self.csv.loc[j]['PLR0'], self.csv.loc[j]['PLR1']])
+                    NLRs.append([self.csv.loc[j]['NLR0'], self.csv.loc[j]['NLR1']])
+                    thresholds.append(float(re.findall(r'\d+',self.csv.loc[j]['Question'])[0])) ### Need to seperate the carrat
+                    j+=1
+                self._init_scalar_question(i, Squestion, thresholds, PLRs, NLRs)
+
+            elif Qtype[i] == 'Sa':
+                break
+            
+            elif Qtype[i] == 'B':
+                question = self.csv.loc[i]['Question']
+                PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
+                NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
+                self._init_binary_question(i,question,PLR,NLR)   
+
+    def __deprecated_generate_questionaire(self):
         for i in self.csv.index:
             qid = self.csv.loc[i]['Qid']
             question = self.csv.loc[i]['Question']
             PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
             NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-            self._init_question(i,question,PLR,NLR)      
-            if self._verbose:
-                print('Question {} - {} [{}]'.format(i,question, qid))
+            self._init_binary_question(i,question,PLR,NLR)      
 
     def get_N_questions(self):
         return len(self.csv.index)
@@ -72,13 +120,21 @@ class Questionaire(Test):
     def get_final_question_id(self):
         return self.csv.iloc[self.get_N_questions()]['Qid']
 
-    def _init_question(self, qId, question, PLR, NLR):
+    def _check_existing_questions(self):
         if not hasattr(self,'question_dict'):
             print('Generating new questionaire')
             self.question_dict = {}
-        
+
+    def _init_binary_question(self, qId, question, PLR, NLR):
         self.question_dict[qId] = Question(PLR,NLR)
         self.question_dict[qId]._add_question(question)
+
+    def _init_scalar_question(self,qId_0, question, thresholds, PLRs, NLRs):
+        scalar_question = Binarize(thresholds, PLRs, NLRs)
+        scalar_question.generate_tree()
+
+        self.question_dict[qId_0] = scalar_question.get_tree()
+        self.question_dict[qId_0].root._add_question(question) #
 
     def evaluate_questionaire(self, inputs):
         
@@ -211,26 +267,38 @@ if __name__ == '__main__':
 
 
     print(7*'#' +'TESTING GCA APP' + 7*'#')
+    
     Q = Questionaire()
     Q._verbose = False
-    Q.load_questionaire_csv('test_3_inputs.csv')
+    Q.load_questionaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
 
     Q.generate_questionaire()
-    Q.prevelence = 0.1
-    print(list(Q.csv['dependant']))
+    Q.question_dict[0].compute_tree(6,.99)
 
-    # Using the Btree
-    Tree = BTree()  # Pass PPV
-    Tree.add(10,[.9,.99],.8) # Pass Threshold, PPV, NPV 
-    Tree.add(20,.6,.2)# Pass Threshold, PPV, NPV
-    Tree.compute_tree(5000,.6)
+    # Q.prevelence = 0.1
+    # print(list(Q.csv['dependant']))
+
+    # # Using the Btree
+    # Tree = BTree()  # Pass PPV
+    # Tree.add(10,[.9,.99],.8) # Pass Threshold, PPV, NPV 
+    # Tree.add(20,.6,.2)# Pass Threshold, PPV, NPV
+
+    # T = Tree.get_tree()
 
 
-    BB = Binarize([0,1,2],[Interval(.5,.99),Interval(.4),Interval(.2)],[.1,.2,.3])
-    BB.generate_tree()
-    Tree = BB.get_tree()
+    # Tree.compute_tree(5000,.6)
 
-    Tree.compute_tree(1,.99)
+
+    # BB = Binarize([0,1,2],[Interval(.5,.99),Interval(.4),Interval(.2)],[.1,.2,.3])
+    # BB.generate_tree()
+    # Tree = BB.get_tree()
+    # root = Tree.get_root()
+    # root._add_question('Testing')
+
+    # root.get_question()
+
+
+    # Tree.compute_tree(1,.99)
 
 #     Q = Questionaire()
 #     Q._verbose = False
