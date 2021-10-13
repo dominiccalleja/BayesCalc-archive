@@ -17,7 +17,7 @@ except:
     home = Path.Path('__file__').parent
 
 
-#default_csv_file = '/Users/dominiccalleja/GCA_App/default_questions.csv'
+default_csv_file = '/Users/dominiccalleja/GCA_App/default_questions.csv'
 
 default_csv_file = StringIO('''Qid,Question,dependant,PLR0,PLR1,NLR0,NLR1
 1000,Headache,,5.2,5.2,0.7,0.7
@@ -135,7 +135,7 @@ class Test(Question):
         return [self.if_positive, self.if_negative]
     
     def __repr__(self):
-        return print(*test_string)
+        return print(*self.test_string)
 
 
 class Questionaire(Test):
@@ -147,12 +147,13 @@ class Questionaire(Test):
         self.load_questionaire_csv(self.default_csv_file)
 
     def load_questionaire_csv(self,csv_file):
-        if Path.Path(csv_file).exists():
-            if csv_file.split('.')[-1] == 'csv':
-                self.csv = pd.read_csv(csv_file, index_col=0)
-            elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
-                self.csv = pd.read_excel(csv_file) # Probably wrong. Needs an option passing but I forget.
-        else:
+        try:
+            if Path.Path(csv_file).exists():
+                if csv_file.split('.')[-1] == 'csv':
+                    self.csv = pd.read_csv(csv_file, index_col=0)
+                elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
+                    self.csv = pd.read_excel(csv_file) # Probably wrong. Needs an option passing but I forget.
+        except:
             self.csv = pd.read_csv(csv_file)
         
         self._seperate_tests()
@@ -221,13 +222,13 @@ class Questionaire(Test):
 
     def answer_question(self,QID, answer, PPV):
         if answer == 1:
-            ppv = self.question_dict[QID].yes(PPV)
+            ppv = self.question_dict[QID].yes(self.question_dict[QID].PLR,PPV)
             ans = 'yes'
         elif answer == 0:
-            ppv = self.question_dict[QID].no(PPV)
+            ppv = self.question_dict[QID].no(self.question_dict[QID].NLR,PPV)
             ans = 'no'
         elif answer == 2:
-            ppv = self.question_dict[QID].dont_know(PPV)
+            ppv = self.question_dict[QID].dont_know(self.question_dict[QID].PLR,self.question_dict[QID].NLR,PPV)
             ans = 'dont know'
         else: #question skipped
             ppv = PPV
@@ -271,10 +272,11 @@ class Questionaire(Test):
 
     def compute_test_VOI(self):
         possible_tests = {}
-        for T in self.tests:
+        for i in self.tests.index:
+            T = self.tests.loc[i]
             sense, spec = LRtoSensSpec(Interval([T['PLR0'],T['PLR1']]), Interval([T['NLR0'],T['NLR1']]))
             possible_tests[T.Qid] = Test(sense,spec,self.final_ppv)
-            
+        return possible_tests
 
 
 
@@ -344,15 +346,21 @@ def NNM(sens, spec, prev):
 if __name__ == '__main__':
     import numpy as np
 
-
+    csv_file_question_test = '/Users/dominiccalleja/GCA_App/default_questions.csv'
+    pd.read_csv(csv_file_question_test)
+    
     print(7*'#' +'TESTING GCA APP' + 7*'#')
     Q = Questionaire()
-
+    Q
     Q._verbose = False
-    Q.load_questionaire_csv('test_3_inputs.csv')
+    Q.load_questionaire_csv(csv_file_question_test)
 
     Q.generate_questionaire()
     Q.prevelence = 0.1
+    ans = np.ones(len(Q.csv.index))
+    all_true = Q.evaluate_questionaire(ans) 
+    pos_tests = Q.compute_test_VOI()
+    dir(Q.tests)
     print(list(Q.csv['dependant']))
 #     Q = Questionaire()
 #     Q._verbose = False
