@@ -55,7 +55,7 @@ class Start(Resource):
             'header': list(question_data['header']),
             'section': list(question_data['section']),
             'dependant': list(question_data['dependant'].fillna(0)),
-            'description': list(question_data['Description'].fillna(""))}
+            'description': list(question_data['description'].fillna(""))}
 
 class Submit(Resource):
     def post(self):
