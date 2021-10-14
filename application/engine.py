@@ -62,10 +62,10 @@ class Questionaire(Test):
     def generate_questionaire(self):
         self._check_existing_questions()
         ### Remove this once we are all using the up to dat csv format
-        if [i for i in self.csv.columns if i == 'Qtype']:
-            self.__new_method_generate_questionaire()
-        else:
-            self.__deprecated_generate_questionaire()
+        #if [i for i in self.csv.columns if i == 'Qtype']:
+        self.__new_method_generate_questionaire()
+        #else:
+        #    self.__deprecated_generate_questionaire()
 
         #if self._verbose:
         #    print('Question {} - {} [{}]'.format(i,question, qid))
@@ -264,6 +264,7 @@ if __name__ == '__main__':
     
     Q = Questionaire()
     Q._verbose = True
+    Q.prevelence = .1
     Q.load_questionaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
 
     Q.generate_questionaire()
@@ -273,9 +274,9 @@ if __name__ == '__main__':
     Q._get_property_list('Qdependant')
 
     Answers = np.ones(36)
-    Answers[0] = 90
-    Answers[23] = 0
-    Answers[24] = 0 
+    Answers[0] = 30
+    Answers[23] = 1
+    Answers[24] = 1 
     Answers[32] = 30
     Answers[35] = 50
 
