@@ -48,7 +48,7 @@ class Start(Resource):
             Q._increment_PPV = ppv
         print(Q.csv)
         
-        question_data = Q.get_Java_Questionaire()
+        question_data = Q.get_interface_Questionaire()
         return {'Qid': list(question_data['Qid']),
             'Qtype': list(question_data['Qtype']),
             'questions': list(question_data['question_text']),
