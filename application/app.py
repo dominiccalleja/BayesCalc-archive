@@ -15,9 +15,6 @@ from application.engine import *
 from io import StringIO
 
 
-
-
-
 @app.route("/")
 def hello():
     return "Hello World!"
@@ -50,12 +47,15 @@ class Start(Resource):
             Q.inc_question_ind = 0
             Q._increment_PPV = ppv
         print(Q.csv)
-        return {
-            'Qid': list(Q.csv['Qid']),
-            'questions': list(Q.csv['Question']),
+        
+        question_data = Q.get_Java_Questionaire()
+        return {'Qid': list(question_data.csv['Qid']),
+            'Qtype': list(question_data.csv['Qtype']),
+            'questions': list(question_data.csv['question_text']),
+            'header': list(question_data.csv['header']),
+            'section': list(question_data.csv['section']),
             'dependant': list(Q.csv['Dependant'].fillna(0)),
-            'description': list(Q.csv['Description'].fillna(""))
-            }
+            'description': list(Q.csv['Description'].fillna(""))}
 
 class Submit(Resource):
     def post(self):

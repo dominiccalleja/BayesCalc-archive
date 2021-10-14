@@ -86,7 +86,11 @@ class Questionaire(Test):
         section = 0
         c = 0 
         for i in self.csv.index:
-            qid = c#self.csv.loc[i]['Qid']
+            #qid = c#self.csv.loc[i]['Qid']
+            qid = self.csv.loc[i]['Qid']
+            qdep = self.csv.loc[i]['Dependant']
+            qdescription = self.csv.loc[i]['Description']
+
             if Qtype[i] == 'H':
                 header = self.csv.loc[i]['Question']
                 section +=1
@@ -107,7 +111,7 @@ class Questionaire(Test):
                     j+=1
                 
                 if not j == self.csv.index[-1]:
-                    self._init_scalar_question(c, Squestion, thresholds, PLRs, NLRs, header,section )
+                    self._init_scalar_question(qid, Squestion, thresholds, PLRs, NLRs, header,section, qdep,qdescription )
                     c +=1
 
             elif Qtype[i] == 'SA':
@@ -117,7 +121,7 @@ class Questionaire(Test):
                 question = self.csv.loc[i]['Question']
                 PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
                 NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-                self._init_binary_question(c,question,PLR,NLR, header,section )
+                self._init_binary_question(qid,question,PLR,NLR, header,section, qdep,qdescription )
                 c += 1   
 
     def __deprecated_generate_questionaire(self):
@@ -139,22 +143,31 @@ class Questionaire(Test):
             print('Generating new questionaire')
             self.question_dict = {}
 
-    def _init_binary_question(self, qId, question, PLR, NLR, header, section):
+    #TODO: Tidy up this fucking mess! 
+
+    def _init_binary_question(self, qId, question, PLR, NLR, header, section, qdep,qdescription):
         self.question_dict[qId] = Question(PLR,NLR)
         self.question_dict[qId]._add_question(question)
+        self.question_dict[qId].Qid = qId
         self.question_dict[qId].Qtype = 'B'
         self.question_dict[qId].header = header
         self.question_dict[qId].section = section
+        self.question_dict[qId].dependant = qdep
+        self.question_dict[qId].description = qdescription
 
-    def _init_scalar_question(self,qId_0, question, thresholds, PLRs, NLRs, header, section):
+
+    def _init_scalar_question(self,qId_0, question, thresholds, PLRs, NLRs, header, section, qdep,qdescription):
         scalar_question = Binarize(thresholds, PLRs, NLRs, question)
         scalar_question.generate_tree()
 
         self.question_dict[qId_0] = scalar_question.get_tree()
         self.question_dict[qId_0].root._add_question(question) #
+        self.question_dict[qId_0].Qid = qId_0
         self.question_dict[qId_0].Qtype = 'S'
         self.question_dict[qId_0].header = header
         self.question_dict[qId_0].section = section
+        self.question_dict[qId_0].dependant = qdep
+        self.question_dict[qId_0].description = qdescription
 
     def evaluate_questionaire(self, inputs):
         
@@ -162,7 +175,7 @@ class Questionaire(Test):
 
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
-            qtype = self.question_dict[i].Qtype
+            qtype = self.question_dict[qId0].Qtype
 
             PPV = self.answer_question(qId0,inp, qtype,PPV)
             if self._verbose:
@@ -224,6 +237,17 @@ class Questionaire(Test):
         super().__init__(sense, spec,self.final_ppv)
         self.what_if()
 
+    def _get_question_property(self,prop):
+        return [getattr(self.question_dict[i],prop) for i in list(self.question_dict.keys())]
+
+    def get_Java_Questionaire(self,*property_list):
+        if not property_list:
+            property_list = ['Qid','section','header','question_text','Qtype','dependant','description']
+        JAVA = pd.DataFrame()
+        for label in property_list:
+            JAVA[label] = self._get_question_property(label)
+        return JAVA
+
     def __repr__(self):
         if hasattr(self,'question_dict'):
             return 'Questionaire class with {} questions'.format(len(self.question_dict))
@@ -244,6 +268,10 @@ if __name__ == '__main__':
 
     Q.generate_questionaire()
 
+    Q.get_Java_Questionaire()
+
+    Q._get_property_list('Qdependant')
+
     Answers = np.ones(36)
     Answers[0] = 90
     Answers[23] = 0
@@ -254,18 +282,23 @@ if __name__ == '__main__':
     Q.evaluate_questionaire(Answers)
     Q.final_ppv
 
+    Qid = list(Q.question_dict)[0]
 
-    Q.question_dict[0].get_question()
-    Q.question_dict[0].header
-    Q.question_dict[0].section
-    Q.question_dict[0].Qtype
+    Q.question_dict[Qid].get_question()
+    Q.question_dict[Qid].header
+    Q.question_dict[Qid].section
+    Q.question_dict[Qid].Qtype
+    Q.question_dict[Qid].Qdependant
+
+    Qid = list(Q.question_dict)[3]
+    Q.question_dict[Qid].get_question()
+    Q.question_dict[Qid].header
+    Q.question_dict[Qid].section
+    Q.question_dict[Qid].Qtype
+    Q.question_dict[Qid].Qdependant
     
 
-    Q.question_dict[2].get_question()
-    Q.question_dict[2].header
-    Q.question_dict[2].section
-    Q.question_dict[2].Qtype
-    
+
     #Q.question_dict[0].Qtype
     # Q.prevelence = 0.1
     # print(list(Q.csv['dependant']))

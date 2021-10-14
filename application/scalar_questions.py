@@ -128,6 +128,7 @@ class Binarize:
             for i in range(self.Nt):
                 New_Tree.add(self.thresholds[i],self.PLR[i],self.NLR[i])
         New_Tree.summary = self.summary
+        New_Tree.question_text = self.question_text
         self.Tree = New_Tree
     
     def get_tree(self):
