@@ -54,7 +54,7 @@ class Start(Resource):
             'questions': list(question_data['question_text']),
             'header': list(question_data['header']),
             'section': list(question_data['section']),
-            'dependant': list(question_data['Dependant'].fillna(0)),
+            'dependant': list(question_data['dependant'].fillna(0)),
             'description': list(question_data['Description'].fillna(""))}
 
 class Submit(Resource):
