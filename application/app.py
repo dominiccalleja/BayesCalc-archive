@@ -69,8 +69,8 @@ class Submit(Resource):
         if json_data['csv'] == "":
             csv = default_
         else:
-            # csv = StringIO(json_data['csv'])
-            csv = default_
+            csv = StringIO(json_data['csv'])
+            #csv = default_
             
         if '[' in str(ppv):
             ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
