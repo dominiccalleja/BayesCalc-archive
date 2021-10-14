@@ -17,8 +17,9 @@ try:
 except:
     home = Path.Path('__file__').parent
 
-from GCA_engine.application.binary_questions import *
-from GCA_engine.application.scalar_questions import *
+sys.path.append(str(home))
+from binary_questions import *
+from scalar_questions import *
 
 
 class Test(Question_Methods):
