@@ -240,7 +240,7 @@ class Questionaire(Test):
     def _get_question_property(self,prop):
         return [getattr(self.question_dict[i],prop) for i in list(self.question_dict.keys())]
 
-    def get_Java_Questionaire(self,*property_list):
+    def get_interface_Questionaire(self,*property_list):
         if not property_list:
             property_list = ['Qid','section','header','question_text','Qtype','dependant','description']
         JAVA = pd.DataFrame()
@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
     Q.generate_questionaire()
 
-    Q.get_Java_Questionaire()
+    Q.get_interface_Questionaire()
 
     Q._get_property_list('Qdependant')
 

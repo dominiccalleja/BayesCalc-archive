@@ -49,13 +49,13 @@ class Start(Resource):
         print(Q.csv)
         
         question_data = Q.get_Java_Questionaire()
-        return {'Qid': list(question_data.csv['Qid']),
-            'Qtype': list(question_data.csv['Qtype']),
-            'questions': list(question_data.csv['question_text']),
-            'header': list(question_data.csv['header']),
-            'section': list(question_data.csv['section']),
-            'dependant': list(Q.csv['Dependant'].fillna(0)),
-            'description': list(Q.csv['Description'].fillna(""))}
+        return {'Qid': list(question_data['Qid']),
+            'Qtype': list(question_data['Qtype']),
+            'questions': list(question_data['question_text']),
+            'header': list(question_data['header']),
+            'section': list(question_data['section']),
+            'dependant': list(question_data['Dependant'].fillna(0)),
+            'description': list(question_data['Description'].fillna(""))}
 
 class Submit(Resource):
     def post(self):
