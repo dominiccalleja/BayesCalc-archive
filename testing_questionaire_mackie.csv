@@ -1,4 +1,4 @@
-,Qid,Question,Qtype,Dependent,Description,PLR0,PLR1,NLR0,NLR1,PLR,NLR,Unnamed: 11,Unnamed: 12,comment?
+,Qid,Question,Qtype,Dependant,Description,PLR0,PLR1,NLR0,NLR1,PLR,NLR,Unnamed: 11,Unnamed: 12,comment?
 0,1000.0,Age,S,,,1.0,1.0,1.0,1.0,1.0,1.0,,,
 1,1002.0,>60,SA,1000.0,,1.12,1.39,0.02,1.13,1.25,0.15,,,
 2,1003.0,>70,SA,1000.0,,1.29,2.09,0.27,0.86,1.64,0.48,,,
