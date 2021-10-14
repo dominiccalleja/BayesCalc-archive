@@ -69,12 +69,12 @@ class Question_Methods:
     
     def get_section_header(self):
         if hasattr(self,'header'):
-            return header
+            return self.header
         else:
             return 'Diagnosis Questions'
 
     def __repr__(self):
-        return 'Binary question : {}:  {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.question_number, self.PLR,self.NLR)
+        return 'Binary question : {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.PLR,self.NLR)
 
 
 class Question(Question_Methods):

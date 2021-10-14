@@ -82,11 +82,14 @@ class Questionaire(Test):
 
     def __new_method_generate_questionaire(self):
         Qtype = self.csv.Qtype.values
+        header = 'Diagnostic Questionaire'
+        section = 0
         c = 0 
         for i in self.csv.index:
             qid = c#self.csv.loc[i]['Qid']
             if Qtype[i] == 'H':
                 header = self.csv.loc[i]['Question']
+                section +=1
 
             elif Qtype[i] == 'S':
                 Squestion = self.csv.loc[i]['Question']
@@ -104,17 +107,17 @@ class Questionaire(Test):
                     j+=1
                 
                 if not j == self.csv.index[-1]:
-                    self._init_scalar_question(c, Squestion, thresholds, PLRs, NLRs)
+                    self._init_scalar_question(c, Squestion, thresholds, PLRs, NLRs, header,section )
                     c +=1
 
-            elif Qtype[i] == 'Sa':
-                break
+            elif Qtype[i] == 'SA':
+                continue
             
             elif Qtype[i] == 'B':
                 question = self.csv.loc[i]['Question']
                 PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
                 NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-                self._init_binary_question(c,question,PLR,NLR)
+                self._init_binary_question(c,question,PLR,NLR, header,section )
                 c += 1   
 
     def __deprecated_generate_questionaire(self):
@@ -136,18 +139,22 @@ class Questionaire(Test):
             print('Generating new questionaire')
             self.question_dict = {}
 
-    def _init_binary_question(self, qId, question, PLR, NLR):
+    def _init_binary_question(self, qId, question, PLR, NLR, header, section):
         self.question_dict[qId] = Question(PLR,NLR)
         self.question_dict[qId]._add_question(question)
         self.question_dict[qId].Qtype = 'B'
+        self.question_dict[qId].header = header
+        self.question_dict[qId].section = section
 
-    def _init_scalar_question(self,qId_0, question, thresholds, PLRs, NLRs):
-        scalar_question = Binarize(thresholds, PLRs, NLRs)
+    def _init_scalar_question(self,qId_0, question, thresholds, PLRs, NLRs, header, section):
+        scalar_question = Binarize(thresholds, PLRs, NLRs, question)
         scalar_question.generate_tree()
 
         self.question_dict[qId_0] = scalar_question.get_tree()
         self.question_dict[qId_0].root._add_question(question) #
         self.question_dict[qId_0].Qtype = 'S'
+        self.question_dict[qId_0].header = header
+        self.question_dict[qId_0].section = section
 
     def evaluate_questionaire(self, inputs):
         
@@ -232,31 +239,34 @@ if __name__ == '__main__':
     print(7*'#' +'TESTING GCA APP' + 7*'#')
     
     Q = Questionaire()
-    Q._verbose = False
+    Q._verbose = True
     Q.load_questionaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
 
     Q.generate_questionaire()
 
-
-
-    Answers = np.zeros(36)
-    Answers[0] = 20
+    Answers = np.ones(36)
+    Answers[0] = 90
     Answers[23] = 0
     Answers[24] = 0 
-    Answers[32] = 10
-    Answers[35] = 401
+    Answers[32] = 30
+    Answers[35] = 50
 
     Q.evaluate_questionaire(Answers)
     Q.final_ppv
 
 
-
-    Q.question_dict[0].compute_tree(10,.99)
-    
-    compute_tree(10,.99)
-    
-    
+    Q.question_dict[0].get_question()
+    Q.question_dict[0].header
+    Q.question_dict[0].section
     Q.question_dict[0].Qtype
+    
+
+    Q.question_dict[2].get_question()
+    Q.question_dict[2].header
+    Q.question_dict[2].section
+    Q.question_dict[2].Qtype
+    
+    #Q.question_dict[0].Qtype
     # Q.prevelence = 0.1
     # print(list(Q.csv['dependant']))
 

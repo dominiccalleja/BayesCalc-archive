@@ -58,6 +58,9 @@ class BTree:
 
     def get_root(self):
         return self.root
+
+    def get_question(self):
+        return self.root.get_question()
     
     def add(self,threshold, PLR, NLR):
         PLR = Interval(PLR)
@@ -105,10 +108,11 @@ def compute_node(tmp, value, PPV):
     return tmp
 
 class Binarize:    
-    def __init__(self,thresholds,PLR, NLR):
+    def __init__(self,thresholds,PLR, NLR, question):
         self.thresholds = thresholds
         self.PLR = PLR
         self.NLR = NLR
+        self.question_text = question
         try:
             self.Nt = len(thresholds)
         except:
@@ -130,7 +134,7 @@ class Binarize:
         return self.Tree
 
     def _gen_summary(self):
-        s0 = 'Binarized scalar question  '+ 3*'#'+ '\n'
+        s0 = 'Binarized scalar question: {}  \n'.format(self.question_text)
         s0 +='\tNumber of thresholds : \t {}\n'.format(self.Nt)
         s0 +='\tthresholds : \n\t {}\n'.format(self.thresholds)
         s0 +='\tPLR : \n\t {}\n'.format(self.PLR)
