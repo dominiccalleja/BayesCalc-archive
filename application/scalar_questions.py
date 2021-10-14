@@ -48,9 +48,13 @@ class Node(Question_Methods):
 
 
 class BTree:
+    summary = 'Tree object'
     def __init__(self):
         self.root = None
         #self.PPV = PPV
+
+    def __repr__(self):
+        return self.summary
 
     def get_root(self):
         return self.root
@@ -90,6 +94,7 @@ class BTree:
             node = compute_node(node, value, PPV)
         return node
     
+    
 def compute_node(tmp, value, PPV):
     if hasattr(tmp,'root'):
         tmp = tmp.root 
@@ -108,6 +113,8 @@ class Binarize:
             self.Nt = len(thresholds)
         except:
             self.Nt = 1
+        self._gen_summary()
+        
     
     def generate_tree(self):
         New_Tree = BTree()
@@ -116,15 +123,19 @@ class Binarize:
         else:   
             for i in range(self.Nt):
                 New_Tree.add(self.thresholds[i],self.PLR[i],self.NLR[i])
+        New_Tree.summary = self.summary
         self.Tree = New_Tree
     
     def get_tree(self):
         return self.Tree
-    
-    def __repr__(self):
-        s0 = 3*'#' + 'BTree object for scalar inputs'+ 3*'#'+ '\n'
+
+    def _gen_summary(self):
+        s0 = 'Binarized scalar question  '+ 3*'#'+ '\n'
         s0 +='\tNumber of thresholds : \t {}\n'.format(self.Nt)
         s0 +='\tthresholds : \n\t {}\n'.format(self.thresholds)
         s0 +='\tPLR : \n\t {}\n'.format(self.PLR)
         s0 +='\tNLR : \n\t {}\n'.format(self.NLR)
-        return s0
+        self.summary = s0
+
+    
+        

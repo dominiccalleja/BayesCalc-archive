@@ -93,12 +93,17 @@ class Questionaire(Test):
                 PLRs = []
                 NLRs = []
                 thresholds = []
-                while Qtype[j] == 'SA':
+                
+                while Qtype[j] == 'SA' :
+                    if j == self.csv.index[-1]:
+                        break
                     PLRs.append([self.csv.loc[j]['PLR0'], self.csv.loc[j]['PLR1']])
                     NLRs.append([self.csv.loc[j]['NLR0'], self.csv.loc[j]['NLR1']])
                     thresholds.append(float(re.findall(r'\d+',self.csv.loc[j]['Question'])[0])) ### Need to seperate the carrat
                     j+=1
-                self._init_scalar_question(i, Squestion, thresholds, PLRs, NLRs)
+                
+                if not j == self.csv.index[-1]:
+                    self._init_scalar_question(i, Squestion, thresholds, PLRs, NLRs)
 
             elif Qtype[i] == 'Sa':
                 break
@@ -131,6 +136,7 @@ class Questionaire(Test):
     def _init_binary_question(self, qId, question, PLR, NLR):
         self.question_dict[qId] = Question(PLR,NLR)
         self.question_dict[qId]._add_question(question)
+        self.question_dict[qId].Qtype = 'B'
 
     def _init_scalar_question(self,qId_0, question, thresholds, PLRs, NLRs):
         scalar_question = Binarize(thresholds, PLRs, NLRs)
@@ -138,6 +144,7 @@ class Questionaire(Test):
 
         self.question_dict[qId_0] = scalar_question.get_tree()
         self.question_dict[qId_0].root._add_question(question) #
+        self.question_dict[qId_0].Qtype = 'S'
 
     def evaluate_questionaire(self, inputs):
         
@@ -201,69 +208,13 @@ class Questionaire(Test):
         super().__init__(sense, spec,self.final_ppv)
         self.what_if()
 
+    def __repr__(self):
+        if hasattr(self,'question_dict'):
+            return 'Questionaire class with {} questions'.format(len(self.question_dict))
+            #[self.question_dict[i] for i in self.question_dict]
+        else:
+            return 'Evaluate generate_questionaire'
 
-
-
-def compute_ppv(LR,PPV):
-    C_PPV = 1/(1+(1/PPV-1)/LR)
-    return C_PPV
-
-
-def compute_npv(LR,NPV):
-    C_PPV = 1 / (1 + (LR/((1/NPV)-1)))
-    return C_PPV
-
-def PPV(sens, spec, prev):
-    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
-        A = Interval(sens*prev)
-        B = Interval((1-spec)*(1-prev))
-        L = A.left/(A.left+B.right)
-        U = A.right/(A.right+B.left)
-        return Interval(L, U)
-    else:
-        return (sens*prev)/(sens*prev+(1-spec)*(1-prev))
-
-def NPV(sens, spec, prev):
-    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
-        A = Interval((1-sens)*prev)
-        B = Interval(spec*(1-prev))
-        L = B.left/(B.left+A.right)
-        U = B.right/(A.left+B.right)
-        return Interval(L, U)
-    else:
-        return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
-
-def LRtoSensSpec(PLR, NLR):
-    specfunc = lambda LP, LN: (1-LP)/(LN-LP)
-    if any([isinstance(P, Interval) for P in [PLR, NLR]]):
-        PLR, NLR = Interval(PLR), Interval(NLR)
-        L = specfunc(PLR.left, NLR.right)
-        R = specfunc(PLR.right, NLR.left)
-        spec = Interval(L, R)
-        sens = Interval(PLR.left*(1-spec.left), PLR.right*(1-spec.right))
-    else:
-        spec = specfunc(PLR,  NLR)
-        sens = PLR*(1-spec)
-    return sens, spec
-    
-def Accuracy(sens, spec, prev):
-    Accfunc = lambda s, t, p: s*p+p*(1-t)
-    if any([isinstance(P, Interval) for P in [sens, spec, prev]]):
-        R = Accfunc(sens.right, spec.right, prev.left)
-        L = Accfunc(sens.left, spec.left, prev.right)
-        Acc = Interval(L, R)
-    else:
-        Acc = Accfunc(sens, spec, prev)
-    return Acc
-
-def Inaccuracy(sens, spec, prev):
-    return 1-Accuracy(sens, spec, prev)
-
-def NND(sens, spec, prev):
-    return 1/Accuracy(sens, spec, prev)
-
-def NNM(sens, spec, prev):
-    return 1/Inaccuracy(sens, spec, prev)
 
 if __name__ == '__main__':
     import numpy as np
@@ -276,8 +227,9 @@ if __name__ == '__main__':
     Q.load_questionaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
 
     Q.generate_questionaire()
-    Q.question_dict[0].compute_tree(6,.99)
 
+    Q.question_dict[0].compute_tree(10,.99)
+    Q.question_dict[0].Qtype
     # Q.prevelence = 0.1
     # print(list(Q.csv['dependant']))
 

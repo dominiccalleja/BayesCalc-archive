@@ -74,7 +74,7 @@ class Question_Methods:
             return 'Diagnosis Questions'
 
     def __repr__(self):
-        return 'Question {}:  {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.question_number, self.PLR,self.NLR)
+        return 'Binary question : {}:  {} \n\t +ve LR {} \n\t -ve LR {}'.format(self.question_text,self.question_number, self.PLR,self.NLR)
 
 
 class Question(Question_Methods):
@@ -102,3 +102,66 @@ class Question(Question_Methods):
 
         self.options = {1: 'yes', 0: 'no', 2: 'Dont Know'}
         super().__init__()
+
+
+
+def compute_ppv(LR,PPV):
+    C_PPV = 1/(1+(1/PPV-1)/LR)
+    return C_PPV
+
+
+def compute_npv(LR,NPV):
+    C_PPV = 1 / (1 + (LR/((1/NPV)-1)))
+    return C_PPV
+
+def PPV(sens, spec, prev):
+    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
+        A = Interval(sens*prev)
+        B = Interval((1-spec)*(1-prev))
+        L = A.left/(A.left+B.right)
+        U = A.right/(A.right+B.left)
+        return Interval(L, U)
+    else:
+        return (sens*prev)/(sens*prev+(1-spec)*(1-prev))
+
+def NPV(sens, spec, prev):
+    if any([isinstance(p, Interval) for p in [sens, spec, prev]]):
+        A = Interval((1-sens)*prev)
+        B = Interval(spec*(1-prev))
+        L = B.left/(B.left+A.right)
+        U = B.right/(A.left+B.right)
+        return Interval(L, U)
+    else:
+        return spec*(1-prev)/(((1-sens)*prev)+spec*(1-prev))
+
+def LRtoSensSpec(PLR, NLR):
+    specfunc = lambda LP, LN: (1-LP)/(LN-LP)
+    if any([isinstance(P, Interval) for P in [PLR, NLR]]):
+        PLR, NLR = Interval(PLR), Interval(NLR)
+        L = specfunc(PLR.left, NLR.right)
+        R = specfunc(PLR.right, NLR.left)
+        spec = Interval(L, R)
+        sens = Interval(PLR.left*(1-spec.left), PLR.right*(1-spec.right))
+    else:
+        spec = specfunc(PLR,  NLR)
+        sens = PLR*(1-spec)
+    return sens, spec
+    
+def Accuracy(sens, spec, prev):
+    Accfunc = lambda s, t, p: s*p+p*(1-t)
+    if any([isinstance(P, Interval) for P in [sens, spec, prev]]):
+        R = Accfunc(sens.right, spec.right, prev.left)
+        L = Accfunc(sens.left, spec.left, prev.right)
+        Acc = Interval(L, R)
+    else:
+        Acc = Accfunc(sens, spec, prev)
+    return Acc
+
+def Inaccuracy(sens, spec, prev):
+    return 1-Accuracy(sens, spec, prev)
+
+def NND(sens, spec, prev):
+    return 1/Accuracy(sens, spec, prev)
+
+def NNM(sens, spec, prev):
+    return 1/Inaccuracy(sens, spec, prev)
