@@ -91,7 +91,7 @@ class BTree:
         return Node.more_than(PPV)
         
     def compute_tree(self, value, PPV):
-
+        value = float(value)
         node = self.get_root()
         while isinstance(node,Node):
             node = compute_node(node, value, PPV)
