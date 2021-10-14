@@ -252,7 +252,7 @@ if __name__ == '__main__':
 
 
     Q.question_dict[0].compute_tree(10,.99)
-    Q.question_dict[4].
+    
     compute_tree(10,.99)
     
     
