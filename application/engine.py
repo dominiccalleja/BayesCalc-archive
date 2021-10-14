@@ -17,8 +17,8 @@ try:
 except:
     home = Path.Path('__file__').parent
 
-from binary_questions import *
-from scalar_questions import *
+from application.binary_questions import *
+from application.scalar_questions import *
 
 
 class Test(Question_Methods):
