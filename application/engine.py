@@ -176,8 +176,8 @@ class Questionaire(Test):
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
             qtype = self.question_dict[qId0].Qtype
-            if qtype == 'S':
-                inp = float(re.findall(r'\d+',inp)[0])
+            #if qtype == 'S':
+            #    inp = float(re.findall(r'\d+',inp)[0])
 
             PPV = self.answer_question(qId0, inp, qtype, PPV)
             if self._verbose:
