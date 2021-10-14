@@ -82,8 +82,9 @@ class Questionaire(Test):
 
     def __new_method_generate_questionaire(self):
         Qtype = self.csv.Qtype.values
+        c = 0 
         for i in self.csv.index:
-            qid = self.csv.loc[i]['Qid']
+            qid = c#self.csv.loc[i]['Qid']
             if Qtype[i] == 'H':
                 header = self.csv.loc[i]['Question']
 
@@ -103,7 +104,8 @@ class Questionaire(Test):
                     j+=1
                 
                 if not j == self.csv.index[-1]:
-                    self._init_scalar_question(i, Squestion, thresholds, PLRs, NLRs)
+                    self._init_scalar_question(c, Squestion, thresholds, PLRs, NLRs)
+                    c +=1
 
             elif Qtype[i] == 'Sa':
                 break
@@ -112,7 +114,8 @@ class Questionaire(Test):
                 question = self.csv.loc[i]['Question']
                 PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
                 NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-                self._init_binary_question(i,question,PLR,NLR)   
+                self._init_binary_question(c,question,PLR,NLR)
+                c += 1   
 
     def __deprecated_generate_questionaire(self):
         for i in self.csv.index:
@@ -152,24 +155,30 @@ class Questionaire(Test):
 
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
-            PPV = self.answer_question(qId0,inp,PPV)
+            qtype = self.question_dict[i].Qtype
+
+            PPV = self.answer_question(qId0,inp, qtype,PPV)
             if self._verbose:
                 print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
                     self.question_dict[qId0].get_question(), inp, PPV))
         self.final_ppv = PPV
 
-    def answer_question(self,QID, answer, PPV):
-        if answer == 1:
-            ppv = self.question_dict[QID].yes(PPV)
-            ans = 'yes'
-        elif answer == 0:
-            ppv = self.question_dict[QID].no(PPV)
-            ans = 'no'
-        elif answer == 2:
-            ppv = self.question_dict[QID].dont_know(PPV)
-            ans = 'dont know'
-        else: #question skipped
-            ppv = PPV
+    def answer_question(self,QID, answer, Qtype, PPV):
+        if Qtype == 'S':
+            ppv = self.question_dict[QID].compute_tree(answer,PPV)
+            ans = 'Scaler'
+        else:
+            if answer == 1:
+                ppv = self.question_dict[QID].yes(PPV)
+                ans = 'yes'
+            elif answer == 0:
+                ppv = self.question_dict[QID].no(PPV)
+                ans = 'no'
+            elif answer == 2:
+                ppv = self.question_dict[QID].dont_know(PPV)
+                ans = 'dont know'
+            else: #question skipped
+                ppv = PPV
         return ppv
 
     def answer_next_question(self,answer): 
@@ -228,7 +237,25 @@ if __name__ == '__main__':
 
     Q.generate_questionaire()
 
+
+
+    Answers = np.zeros(36)
+    Answers[0] = 20
+    Answers[23] = 0
+    Answers[24] = 0 
+    Answers[32] = 10
+    Answers[35] = 401
+
+    Q.evaluate_questionaire(Answers)
+    Q.final_ppv
+
+
+
     Q.question_dict[0].compute_tree(10,.99)
+    Q.question_dict[4].
+    compute_tree(10,.99)
+    
+    
     Q.question_dict[0].Qtype
     # Q.prevelence = 0.1
     # print(list(Q.csv['dependant']))
