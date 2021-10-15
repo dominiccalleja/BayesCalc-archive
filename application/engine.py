@@ -76,7 +76,7 @@ class Questionaire(Test):
                 self.compute_with_midpoint(midpoint)    
 
         self.__new_method_generate_questionaire()
-        if compute_option == 'robust':
+        if not compute_option == 'robust':
             self._revert_csv()
 
         ### Remove this once we are all using the up to dat csv format
