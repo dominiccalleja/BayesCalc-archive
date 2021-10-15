@@ -61,16 +61,18 @@ class Questionaire(Test):
 
     def generate_questionaire(self, compute_option = 'robust',midpoint = .5):
         self._check_existing_questions()
-        Compute_options = ['robust', 'left', 'right', 'midpoint']
+        Compute_options = ['robust','precise', 'left', 'right', 'midpoint']
         
         if not [i for i in Compute_options if i == compute_option ]:
             print('ERROR: compute_option must be {}'.format(Compute_options))
         else:
             if compute_option == Compute_options[1]:
-                self.compute_with_midpoint(0)#self.compute_with_endpoint(right=False)
+                self.compute_with_precise()
             elif compute_option == Compute_options[2]:
-                self.compute_with_midpoint(1)
+                self.compute_with_midpoint(0)#self.compute_with_endpoint(right=False)
             elif compute_option == Compute_options[3]:
+                self.compute_with_midpoint(1)
+            elif compute_option == Compute_options[4]:
                 self.compute_with_midpoint(midpoint)    
 
         self.__new_method_generate_questionaire()
