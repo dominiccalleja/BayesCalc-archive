@@ -59,11 +59,25 @@ class Questionaire(Test):
         # elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
         #     self.csv = pd.read_csv(csv_file, index_col=None)
 
-    def generate_questionaire(self):
+    def generate_questionaire(self, compute_option = 'robust',midpoint = .5):
         self._check_existing_questions()
+        Compute_options = ['robust', 'left', 'right', 'midpoint']
+        
+        if not [i for i in Compute_options if i == compute_option ]:
+            print('ERROR: compute_option must be {}'.format(Compute_options))
+        else:
+            if compute_option == Compute_options[1]:
+                self.compute_with_midpoint(0)#self.compute_with_endpoint(right=False)
+            elif compute_option == Compute_options[2]:
+                self.compute_with_midpoint(1)
+            elif compute_option == Compute_options[3]:
+                self.compute_with_midpoint(midpoint)    
+
+        self.__new_method_generate_questionaire()
+        self._revert_csv()
+
         ### Remove this once we are all using the up to dat csv format
         #if [i for i in self.csv.columns if i == 'Qtype']:
-        self.__new_method_generate_questionaire()
         #else:
         #    self.__deprecated_generate_questionaire()
 
@@ -81,6 +95,7 @@ class Questionaire(Test):
         self.csv['NLR1'] = NLR
     
     def compute_with_endpoint(self, right=True):
+        self._copy_csv()
         if right:
             ind = 1
         else:
@@ -288,6 +303,8 @@ class Questionaire(Test):
             return 'Evaluate generate_questionaire'
 
 
+
+
 if __name__ == '__main__':
     import numpy as np
 
@@ -299,10 +316,10 @@ if __name__ == '__main__':
     Q.prevelence = .1
     Q.load_questionaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
 
-    Q.generate_questionaire()
+    Q.generate_questionaire(compute_option='right')
     Q.get_interface_Questionaire()
 
-    Answers = np.ones(36)
+    Answers = np.zeros(36)
     Answers[0] = 30
     Answers[23] = 1
     Answers[24] = 1 
