@@ -71,14 +71,44 @@ class Questionaire(Test):
         #    print('Question {} - {} [{}]'.format(i,question, qid))
 
     ## Activate subsiquent with an option in generate questionaire! 
-    def compute_with_midpoint(self):
-        return 'TODO impliment to change the .csv to the midpoint'
+    def compute_with_midpoint(self, midpoint = .5):
+        self._copy_csv()
+        PLR = self.csv['PLR0'] + (self.csv['PLR1'] - self.csv['PLR0'])*midpoint
+        NLR = self.csv['NLR0'] + (self.csv['NLR1'] - self.csv['NLR0'])*midpoint
+        self.csv['PLR0'] = PLR
+        self.csv['PLR1'] = PLR
+        self.csv['NLR0'] = NLR
+        self.csv['NLR1'] = NLR
     
     def compute_with_endpoint(self, right=True):
-        return 'TODO impliment to change the .csv to the endpoint'
+        if right:
+            ind = 1
+        else:
+            ind = 0 
+        l_csv = len(self.csv.index)
+        I = np.zeros([l_csv,2])
+        for i in range(l_csv):
+            I[i,:] = [self.csv['PLR0'].iloc[i],self.csv['PLR1'].iloc[i]]
 
-    def compute_with_mean(self):
-        return 'TODO impliment to change the .csv to the PLR/NLR variables'
+        self.csv['PLR0'] = I[:,ind]
+        self.csv['PLR1'] = I[:,ind]
+
+    def compute_with_precise(self):
+        self._copy_csv()
+        if not [i for i in Q.csv.columns if i =='PLR']:
+            self.compute_with_midpoint()
+        else:
+            self.csv['PLR0'] = self.csv['PLR']
+            self.csv['PLR1'] = self.csv['PLR']
+            self.csv['NLR0'] = self.csv['NLR']
+            self.csv['NLR1'] = self.csv['NLR']
+
+
+    def _copy_csv(self):
+        self.csv_copy = self.csv.copy(deep=True)
+
+    def _revert_csv(self):
+        self.csv = self.csv_copy.copy(deep=True)
 
     def __new_method_generate_questionaire(self):
         Qtype = self.csv.Qtype.values
@@ -270,10 +300,7 @@ if __name__ == '__main__':
     Q.load_questionaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
 
     Q.generate_questionaire()
-
     Q.get_interface_Questionaire()
-
-    Q._get_property_list('Qdependant')
 
     Answers = np.ones(36)
     Answers[0] = 30
