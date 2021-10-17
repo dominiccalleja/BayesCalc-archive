@@ -22,7 +22,7 @@ except:
 sys.path.append(str(home))
 from binary_questions import *
 from scalar_questions import *
-
+default_csv_file = str(home.parent)+'/input_files/test_3_inputs.csv'
 
 class Test(Question_Methods):
 
@@ -45,7 +45,7 @@ class Test(Question_Methods):
 
 
 class Questionnaire(Test):
-    default_csv_file = str(home.parent)+'/test_3_inputs.csv'
+    default_csv_file = default_csv_file
     _verbose = True
     prevelence = 0.5
     def __init__(self):
@@ -317,7 +317,7 @@ if __name__ == '__main__':
     Q = Questionnaire()
     Q._verbose = True
     Q.prevelence = .1
-    Q.load_Questionnaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
+    Q.load_Questionnaire_csv(str(home.parent)+'/input_files/testing_questionaire_mackie.csv')
 
     Q.generate_Questionnaire(compute_option='precise')
     Q.get_interface_Questionnaire()
