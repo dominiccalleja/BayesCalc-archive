@@ -22,7 +22,7 @@ except:
 sys.path.append(str(home))
 from binary_questions import *
 from scalar_questions import *
-
+default_csv_file = str(home.parent)+'/input_files/test_3_inputs.csv'
 
 class Test(Question_Methods):
 
@@ -44,22 +44,22 @@ class Test(Question_Methods):
         print(*test_string)
 
 
-class Questionaire(Test):
-    default_csv_file = str(home.parent)+'/test_3_inputs.csv'
+class Questionnaire(Test):
+    default_csv_file = default_csv_file
     _verbose = True
     prevelence = 0.5
     def __init__(self):
-        print('Initialising with the default questionaire: \n \t{}'.format(self.default_csv_file))
-        self.load_questionaire_csv(self.default_csv_file)
+        print('Initialising with the default Questionnaire: \n \t{}'.format(self.default_csv_file))
+        self.load_Questionnaire_csv(self.default_csv_file)
 
-    def load_questionaire_csv(self,csv_file):
+    def load_Questionnaire_csv(self,csv_file):
         self.csv = pd.read_csv(csv_file)
         # if csv_file.split('.')[-1] == 'csv':
         #     self.csv = pd.read_csv(csv_file, index_col=None)
         # elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
         #     self.csv = pd.read_csv(csv_file, index_col=None)
 
-    def generate_questionaire(self, compute_option = 'robust',midpoint = .5):
+    def generate_Questionnaire(self, compute_option = 'robust',midpoint = .5):
         self._check_existing_questions()
         Compute_options = ['robust','precise', 'left', 'right', 'midpoint']
         
@@ -75,19 +75,19 @@ class Questionaire(Test):
             elif compute_option == Compute_options[4]:
                 self.compute_with_midpoint(midpoint)    
 
-        self.__new_method_generate_questionaire()
+        self.__new_method_generate_Questionnaire()
         if not compute_option == 'robust':
             self._revert_csv()
 
         ### Remove this once we are all using the up to dat csv format
         #if [i for i in self.csv.columns if i == 'Qtype']:
         #else:
-        #    self.__deprecated_generate_questionaire()
+        #    self.__deprecated_generate_Questionnaire()
 
         #if self._verbose:
         #    print('Question {} - {} [{}]'.format(i,question, qid))
 
-    ## Activate subsiquent with an option in generate questionaire! 
+    ## Activate subsiquent with an option in generate Questionnaire! 
     def compute_with_midpoint(self, midpoint = .5):
         self._copy_csv()
         PLR = self.csv['PLR0'] + (self.csv['PLR1'] - self.csv['PLR0'])*midpoint
@@ -128,9 +128,9 @@ class Questionaire(Test):
     def _revert_csv(self):
         self.csv = self.csv_copy.copy(deep=True)
 
-    def __new_method_generate_questionaire(self):
+    def __new_method_generate_Questionnaire(self):
         Qtype = self.csv.Qtype.values
-        header = 'Diagnostic Questionaire'
+        header = 'Diagnostic Questionnaire'
         section = 0
         c = 0 
         for i in self.csv.index:
@@ -172,7 +172,7 @@ class Questionaire(Test):
                 self._init_binary_question(qid,question,PLR,NLR, header,section, qdep,qdescription )
                 c += 1   
 
-    def __deprecated_generate_questionaire(self):
+    def __deprecated_generate_Questionnaire(self):
         for i in self.csv.index:
             qid = self.csv.loc[i]['Qid']
             question = self.csv.loc[i]['Question']
@@ -188,7 +188,7 @@ class Questionaire(Test):
 
     def _check_existing_questions(self):
         if not hasattr(self,'question_dict'):
-            print('Generating new questionaire')
+            print('Generating new Questionnaire')
             self.question_dict = {}
 
     #TODO: Tidy up this fucking mess! 
@@ -217,7 +217,7 @@ class Questionaire(Test):
         self.question_dict[qId_0].dependant = qdep
         self.question_dict[qId_0].description = qdescription
 
-    def evaluate_questionaire(self, inputs):
+    def evaluate_Questionnaire(self, inputs):
         
         PPV = Interval(self.prevelence)
 
@@ -276,7 +276,7 @@ class Questionaire(Test):
     def get_final_ppv(self):
         if not hasattr(self, 'final_ppv'):
             print(
-                'Error: You have not computed the PPV. Pass answers to self.evaluate_questionaire(inputs)')
+                'Error: You have not computed the PPV. Pass answers to self.evaluate_Questionnaire(inputs)')
         else:
             return self.final_ppv
 
@@ -290,7 +290,7 @@ class Questionaire(Test):
     def _get_question_property(self,prop):
         return [getattr(self.question_dict[i],prop) for i in list(self.question_dict.keys())]
 
-    def get_interface_Questionaire(self,*property_list):
+    def get_interface_Questionnaire(self,*property_list):
         if not property_list:
             property_list = ['Qid','section','header','question_text','Qtype','dependant','description']
         JAVA = pd.DataFrame()
@@ -300,10 +300,10 @@ class Questionaire(Test):
 
     def __repr__(self):
         if hasattr(self,'question_dict'):
-            return 'Questionaire class with {} questions'.format(len(self.question_dict))
+            return 'Questionnaire class with {} questions'.format(len(self.question_dict))
             #[self.question_dict[i] for i in self.question_dict]
         else:
-            return 'Evaluate generate_questionaire'
+            return 'Evaluate generate_Questionnaire'
 
 
 
@@ -314,22 +314,22 @@ if __name__ == '__main__':
 
     print(7*'#' +'TESTING GCA APP' + 7*'#')
     
-    Q = Questionaire()
+    Q = Questionnaire()
     Q._verbose = True
     Q.prevelence = .1
-    Q.load_questionaire_csv(str(home.parent)+'/testing_questionaire_mackie.csv')
+    Q.load_Questionnaire_csv(str(home.parent)+'/input_files/testing_questionaire_mackie.csv')
 
-    Q.generate_questionaire(compute_option='right')
-    Q.get_interface_Questionaire()
+    Q.generate_Questionnaire(compute_option='precise')
+    Q.get_interface_Questionnaire()
 
-    Answers = np.zeros(36)
-    Answers[0] = 30
+    Answers = np.ones(36)
+    Answers[0] = 90
     Answers[23] = 1
     Answers[24] = 1 
     Answers[32] = 30
     Answers[35] = 50
 
-    Q.evaluate_questionaire(Answers)
+    Q.evaluate_Questionnaire(Answers)
     Q.final_ppv
 
     Qid = list(Q.question_dict)[0]
@@ -375,23 +375,23 @@ if __name__ == '__main__':
 
     # Tree.compute_tree(1,.99)
 
-#     Q = Questionaire()
+#     Q = Questionnaire()
 #     Q._verbose = False
-#     Q.generate_questionaire()
+#     Q.generate_Questionnaire()
 #     len(Q.csv.index.values)
 #     len(Q.question_dict.keys())
 
 
 #     print('\n\n All True')
 #     ans = np.ones(len(Q.csv.index))
-#     all_true = Q.evaluate_questionaire(ans)
+#     all_true = Q.evaluate_Questionnaire(ans)
 #     Q.what_if_test(.9,.9)
 
 
 #     print('\n\n All False')
 #     time.sleep(10)
 #     ans = np.zeros(len(Q.csv.index))
-#     all_true = Q.evaluate_questionaire(ans)
+#     all_true = Q.evaluate_Questionnaire(ans)
 #     Q.what_if_test(.9,.9)
 
 
@@ -399,26 +399,26 @@ if __name__ == '__main__':
 #     print('\n\nAll dont know')
 #     time.sleep(10)
 #     ans = np.ones(len(Q.csv.index))*2
-#     all_maybe = Q.evaluate_questionaire(ans)
+#     all_maybe = Q.evaluate_Questionnaire(ans)
 #     Q.what_if_test(.9,.9)
 
 #     print('\n\nRandom')
 #     time.sleep(10)
 #     ans = np.random.randint(0,2,len(Q.csv.index))
-#     all_random = Q.evaluate_questionaire(ans)
+#     all_random = Q.evaluate_Questionnaire(ans)
 #     Q.what_if_test(.9,.9)
 
 
 
 #     csv_test = '/Users/dominiccalleja/GCA_App/test_3_inputs.csv'
-#     Qtest = Questionaire()
+#     Qtest = Questionnaire()
 #     Qtest.prevelence = 0.01
-#     Qtest.load_questionaire_csv( csv_test)
-#     Qtest.generate_questionaire()
+#     Qtest.load_Questionnaire_csv( csv_test)
+#     Qtest.generate_Questionnaire()
 
 
 #     ans = [0,1,0]#np.ones(len(Qtest.csv.index))
-#     all_true = Qtest.evaluate_questionaire(ans)
+#     all_true = Qtest.evaluate_Questionnaire(ans)
 
 #     Qtest.what_if_test(.9,.9)
     
@@ -440,7 +440,7 @@ if __name__ == '__main__':
 
 
 # # ans = np.zeros(len(Qtest.csv.index))
-# # all_false = Qtest.evaluate_questionaire(ans)
+# # all_false = Qtest.evaluate_Questionnaire(ans)
 
 
 

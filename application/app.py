@@ -24,7 +24,7 @@ class Start(Resource):
         default_ = 'test_3_inputs.csv'
         
         
-        Q = Questionaire()
+        Q = Questionnaire()
         Q._verbose = False
         json_data = request.get_json()
         ppv = json_data['ppv']
@@ -40,15 +40,15 @@ class Start(Resource):
         else:
             ppv = float(ppv)
             
-        Q.load_questionaire_csv(csv)
-        Q.generate_questionaire()
+        Q.load_Questionnaire_csv(csv)
+        Q.generate_Questionnaire()
         Q.prevelence = ppv
         if hasattr(Q,'inc_question_ind'):
             Q.inc_question_ind = 0
             Q._increment_PPV = ppv
         print(Q.csv)
         
-        question_data = Q.get_interface_Questionaire()
+        question_data = Q.get_interface_Questionnaire()
         return {'Qid': list(question_data['Qid']),
             'Qtype': list(question_data['Qtype']),
             'questions': list(question_data['question_text']),
@@ -62,7 +62,7 @@ class Submit(Resource):
         default_ = 'test_3_inputs.csv'
         
         
-        Q = Questionaire()
+        Q = Questionnaire()
         Q._verbose = False
         json_data = request.get_json()
         ppv = json_data['ppv']
@@ -77,12 +77,12 @@ class Submit(Resource):
         else:
             ppv = float(ppv)
             
-        Q.load_questionaire_csv(csv)
-        Q.generate_questionaire()
+        Q.load_Questionnaire_csv(csv)
+        Q.generate_Questionnaire()
         Q.prevelence = ppv
         # json_data = request.get_json()
         answers = json_data['answers']
-        Q.evaluate_questionaire(answers)
+        Q.evaluate_Questionnaire(answers)
         return {'ppv': '[%.3f,%.3f]'%(Q.final_ppv.left,Q.final_ppv.right)}
     
 def print_fact_array(ppv: Interval):
