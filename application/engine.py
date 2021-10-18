@@ -209,6 +209,7 @@ class Questionnaire(Test):
         scalar_question.generate_tree()
 
         self.question_dict[qId_0] = scalar_question.get_tree()
+        print(question)
         self.question_dict[qId_0].root._add_question(question) #
         self.question_dict[qId_0].Qid = qId_0
         self.question_dict[qId_0].Qtype = 'S'
@@ -317,12 +318,12 @@ if __name__ == '__main__':
     Q = Questionnaire()
     Q._verbose = True
     Q.prevelence = .1
-    Q.load_Questionnaire_csv(str(home.parent)+'/input_files/testing_questionaire_mackie.csv')
+    Q.load_Questionnaire_csv(str(home.parent)+'/input_files/vanessa_modded.csv')
 
     Q.generate_Questionnaire(compute_option='precise')
     Q.get_interface_Questionnaire()
 
-    Answers = np.ones(36)
+    Answers = np.ones(74)
     Answers[0] = 90
     Answers[23] = 1
     Answers[24] = 1 
