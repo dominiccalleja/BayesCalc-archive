@@ -110,10 +110,12 @@ class Plot(Resource):
         #!TODO: make it work for other sizes
         x = [i for i in range(10) for j in range(10)]
         y = [j for i in range(10) for j in range(10)]
-
+        ppv = request.get_json()
         N = len(x)
-        red_stop = floor(N*Q.final_ppv.left)
-        orange_stop = floor(N*Q.final_ppv.right)
+        red_stop = floor(N*ppv['ppvl'])
+        orange_stop = floor(N*ppv['ppvr'])
+
+
         
         red_x = x[0:red_stop]
         red_y = y[0:red_stop]
