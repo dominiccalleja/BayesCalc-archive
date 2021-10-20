@@ -22,12 +22,12 @@ except:
 sys.path.append(str(home))
 from binary_questions import *
 from scalar_questions import *
-default_csv_file = str(home.parent)+'/input_files/test_3_inputs.csv'
+default_csv_file = str(home.parent)+'/input_files/default_questionnaire.csv'
 
-class Test(Question_Methods):
+class Test(Question):
 
     def __init__(self, sensitivity, specificity, PPV):
-        super().__init__(sensitivity=sensitivity, specificity=sensitivity)
+        super().__init__(sensitivity=sensitivity, specificity=specificity)
         self._PPV_pretest = PPV
     
     def what_if(self):
@@ -42,6 +42,7 @@ class Test(Question_Methods):
         test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
     
         print(*test_string)
+        return [if_positive, if_negative]
 
 
 class Questionnaire(Test):
@@ -113,7 +114,7 @@ class Questionnaire(Test):
 
     def compute_with_precise(self):
         self._copy_csv()
-        if not [i for i in Q.csv.columns if i =='PLR']:
+        if not [i for i in self.csv.columns if i =='PLR']:
             self.compute_with_midpoint()
         else:
             self.csv['PLR0'] = self.csv['PLR']
@@ -138,6 +139,7 @@ class Questionnaire(Test):
             qid = self.csv.loc[i]['Qid']
             qdep = self.csv.loc[i]['Dependant']
             qdescription = self.csv.loc[i]['Description']
+            print(self.csv.loc[i]['Question'])
 
             if Qtype[i] == 'H':
                 header = self.csv.loc[i]['Question']
@@ -146,21 +148,26 @@ class Questionnaire(Test):
             elif Qtype[i] == 'S':
                 Squestion = self.csv.loc[i]['Question']
                 j = i +1
+                c = 0 
                 PLRs = []
                 NLRs = []
                 thresholds = []
-                
                 while Qtype[j] == 'SA' :
                     if j == self.csv.index[-1]:
                         break
                     PLRs.append([self.csv.loc[j]['PLR0'], self.csv.loc[j]['PLR1']])
-                    NLRs.append([self.csv.loc[j]['NLR0'], self.csv.loc[j]['NLR1']])
+                    if c ==0 :
+                        NLRs.append([self.csv.loc[j]['NLR0'], self.csv.loc[j]['NLR1']])
+                    else:
+                        NLRs.append([self.csv.loc[j-1]['PLR0'], self.csv.loc[j-1]['PLR1']])
+
                     thresholds.append(float(re.findall(r'\d+',self.csv.loc[j]['Question'])[0])) ### Need to seperate the carrat
+                    print(thresholds)
                     j+=1
-                
+                    c +=1
                 if not j == self.csv.index[-1]:
                     self._init_scalar_question(qid, Squestion, thresholds, PLRs, NLRs, header,section, qdep,qdescription )
-                    c +=1
+                    
 
             elif Qtype[i] == 'SA':
                 continue
@@ -219,7 +226,7 @@ class Questionnaire(Test):
         self.question_dict[qId_0].description = qdescription
 
     def evaluate_Questionnaire(self, inputs):
-        
+        ppv_store = [self.prevelence]
         PPV = Interval(self.prevelence)
 
         for i, inp in enumerate(inputs):
@@ -229,10 +236,12 @@ class Questionnaire(Test):
             #    inp = float(re.findall(r'\d+',inp)[0])
 
             PPV = self.answer_question(qId0, inp, qtype, PPV)
+            ppv_store.append(PPV)
             if self._verbose:
                 print('Q : {} \n\tAns : {}  \n\t ppv: {}'.format(
                     self.question_dict[qId0].get_question(), inp, PPV))
         self.final_ppv = PPV
+        self.ppv_store = ppv_store
 
     def answer_question(self,QID, answer, Qtype, PPV):
         if Qtype == 'S':
@@ -286,7 +295,9 @@ class Questionnaire(Test):
 
     def what_if_test(self,sense, spec):
         super().__init__(sense, spec,self.final_ppv)
-        self.what_if()
+        YES, NO = self.what_if()
+        return YES, NO
+
 
     def _get_question_property(self,prop):
         return [getattr(self.question_dict[i],prop) for i in list(self.question_dict.keys())]
@@ -317,21 +328,85 @@ if __name__ == '__main__':
     
     Q = Questionnaire()
     Q._verbose = True
-    Q.prevelence = .1
-    Q.load_Questionnaire_csv(str(home.parent)+'/input_files/vanessa_modded.csv')
-
+    Q.prevelence = .25
+    #Q.load_Questionnaire_csv('/Users/dominiccalleja/GCA_App/GCA_engine/input_files/Vinnette_tests.csv')
+    #Q.load_Questionnaire_csv('/Users/dominiccalleja/GCA_App/GCA_engine/input_files/Vinnette_tests.csv')
+    #str(home.parent)+'/input_files/vanessa_modded.csv')
     Q.generate_Questionnaire(compute_option='precise')
-    Q.get_interface_Questionnaire()
+    Q._copy_csv()
+    CSV = Q.get_interface_Questionnaire()
 
-    Answers = np.ones(74)
-    Answers[0] = 90
-    Answers[23] = 1
-    Answers[24] = 1 
-    Answers[32] = 30
-    Answers[35] = 50
+    Q.compute_with_precise()
+
+    # Answers = np.ones(34)
+    # Answers[0] = 90
+    # Answers[23] = 1
+    # Answers[24] = 1 
+    # Answers[32] = 30
+    # Answers[35] = 50
 
     Q.evaluate_Questionnaire(Answers)
     Q.final_ppv
+
+
+
+
+    patients = pd.read_excel('/Users/dominiccalleja/GCA_App/GCA_engine/input_files/Vinnette_tests_1.xlsx')
+
+    P0 = patients['PATIENT1']
+    P0.values
+    Q.evaluate_Questionnaire(P0.values[:-1])
+    Q.final_ppv
+
+
+def get_nat_freq(numer,denom = 1000):
+    A = numer*denom
+    B = denom - A    
+    return ['positive : {} of {}'.format(A,denom),'negative : {} of {}'.format(B,denom)]
+
+    P0 = patients['PATIENT4']
+    P0.values
+    Q.evaluate_Questionnaire(P0.values[:-1])
+    Q.final_ppv
+    Q.what_if_test(.77,.96)
+    NF_P = get_nat_freq(.76,denom=860) 
+    NF_N = get_nat_freq(.03,denom=140) 
+    print('Pos Test NF: \n{}'.format(NF_P))
+    print('Neg Test NF: \n{}'.format(NF_N))
+
+    Q.final_ppv = Interval(.16)
+    Q.what_if_test(.77,.96)
+
+
+    P0 = patients['PATIENT3']
+    P0.values
+    Q.evaluate_Questionnaire(P0.values[:-1])
+    Q.final_ppv
+
+
+    Q.get_natural_frequency()
+
+    P0 = patients['PATIENT4']
+    P0.values
+    Q.evaluate_Questionnaire(P0.values[:-1])
+    Q.final_ppv
+    Q.what_if_test(.77,.96)
+
+    Q.final_ppv = Interval(.04,.76)
+    Q.what_if_test(.77,1)
+
+    Q.final_ppv = Interval(.47)
+    Q.what_if_test(.77,1)
+
+
+    T = Test(.77,.96,.14)    
+
+    Q.what_if_test(.77,.96,.14)
+
+    for ans in P0:
+        Q.answer_next_question(ans)
+
+
 
     Qid = list(Q.question_dict)[0]
 

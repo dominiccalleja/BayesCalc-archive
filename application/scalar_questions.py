@@ -100,6 +100,10 @@ class BTree:
 def compute_node(tmp, value, PPV):
     if hasattr(tmp,'root'):
         tmp = tmp.root 
+    print('Threshold: {}'.format(tmp.threshold))
+    print('Values: {}'.format(value))
+    
+    
     if value < tmp.threshold:
         tmp = tmp.less_than(PPV)
     else:
