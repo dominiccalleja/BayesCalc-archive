@@ -46,12 +46,11 @@ class Test(Question):
 
 
 class Questionnaire(Test):
-    default_csv_file = default_csv_file
     _verbose = True
     prevelence = 0.5
-    def __init__(self):
-        print('Initialising with the default Questionnaire: \n \t{}'.format(self.default_csv_file))
-        self.load_Questionnaire_csv(self.default_csv_file)
+    def __init__(self, csv_file):
+        print('Initialising the Questionnaire: \n \t{}'.format(csv_file))
+        self.load_Questionnaire_csv(csv_file)
 
     def load_Questionnaire_csv(self,csv_file):
         self.csv = pd.read_csv(csv_file)
@@ -326,7 +325,7 @@ if __name__ == '__main__':
 
     print(7*'#' +'TESTING GCA APP' + 7*'#')
     
-    Q = Questionnaire()
+    Q = Questionnaire(str(home.parent)+'\input_files\\default_questionnaire_clean.csv')
     Q._verbose = True
     Q.prevelence = .25
     #Q.load_Questionnaire_csv('/Users/dominiccalleja/GCA_App/GCA_engine/input_files/Vinnette_tests.csv')
@@ -338,11 +337,11 @@ if __name__ == '__main__':
 
     Q.compute_with_precise()
 
-    # Answers = np.ones(34)
-    # Answers[0] = 90
-    # Answers[23] = 1
-    # Answers[24] = 1 
-    # Answers[32] = 30
+    Answers = np.ones(34)
+    Answers[0] = 90
+    Answers[23] = 1
+    Answers[24] = 1 
+    Answers[32] = 30
     # Answers[35] = 50
 
     Q.evaluate_Questionnaire(Answers)
@@ -351,7 +350,7 @@ if __name__ == '__main__':
 
 
 
-    patients = pd.read_excel('/Users/dominiccalleja/GCA_App/GCA_engine/input_files/Vinnette_tests_1.xlsx')
+    patients = pd.read_excel(str(home.parent)+'\input_files\Vinnette_tests_1.xlsx')
 
     P0 = patients['PATIENT1']
     P0.values
