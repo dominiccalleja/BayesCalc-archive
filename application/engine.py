@@ -46,10 +46,11 @@ class Test(Question):
 
 
 class Questionnaire(Test):
-    _verbose = True
+    
     prevelence = 0.5
     def __init__(self, csv_file):
-        print('Initialising the Questionnaire: \n \t{}'.format(csv_file))
+        self._verbose = False
+        if self._verbose: print('Initialising the Questionnaire: \n \t{}'.format(csv_file))
         self.load_Questionnaire_csv(csv_file)
 
     def load_Questionnaire_csv(self,csv_file):
@@ -107,7 +108,7 @@ class Questionnaire(Test):
             qid = self.csv.loc[i]['Qid']
             qdep = self.csv.loc[i]['Dependant']
             qdescription = self.csv.loc[i]['Description']
-            print(self.csv.loc[i]['Question'])
+            if self._verbose: print(self.csv.loc[i]['Question'])
             if Qtype[i] == 'H':
                 header = self.csv.loc[i]['Question']
                 section +=1
@@ -131,7 +132,7 @@ class Questionnaire(Test):
                         NLRs.append(qPLR)
 
                     thresholds.append(float(re.findall(r'\d+',self.csv.loc[j]['Question'])[0])) ### Need to seperate the carrat
-                    print(thresholds)
+                    if self._verbose: print(thresholds)
                     j+=1
                     c +=1
                 if not j == self.csv.index[-1]:
@@ -155,7 +156,7 @@ class Questionnaire(Test):
 
     def _check_existing_questions(self):
         if not hasattr(self,'question_dict'):
-            print('Generating new Questionnaire')
+            if self._verbose: print('Generating new Questionnaire')
             self.question_dict = {}
 
     #TODO: Tidy up this fucking mess! 
@@ -176,7 +177,7 @@ class Questionnaire(Test):
         scalar_question.generate_tree()
 
         self.question_dict[qId_0] = scalar_question.get_tree()
-        print(question)
+        if self._verbose: print(question)
         self.question_dict[qId_0].root._add_question(question) #
         self.question_dict[qId_0].Qid = qId_0
         self.question_dict[qId_0].Qtype = 'S'

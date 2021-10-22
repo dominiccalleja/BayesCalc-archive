@@ -21,14 +21,18 @@ def hello():
 
 class Start(Resource):
     def post(self):
+        _verbose = False
         default_ = 'test_3_inputs.csv'
         
         
-        Q = Questionnaire()
-        Q._verbose = False
+        
         json_data = request.get_json()
         ppv = json_data['ppv']
-        print(json_data['csv'])
+        try:
+            compute_option = json_data['compute_ratio']
+        except:
+            compute_option = 'robust'
+        if _verbose: print(json_data['csv'])
         if json_data['csv'] == "":
             csv = default_
         else:
@@ -39,14 +43,15 @@ class Start(Resource):
             ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
         else:
             ppv = float(ppv)
-            
-        Q.load_Questionnaire_csv(csv)
-        Q.generate_Questionnaire()
+
+        Q = Questionnaire(csv)
+        Q._verbose = False
+        Q.generate_Questionnaire(compute_option)
         Q.prevelence = ppv
         if hasattr(Q,'inc_question_ind'):
             Q.inc_question_ind = 0
             Q._increment_PPV = ppv
-        print(Q.csv)
+        if _verbose: print(Q.csv)
         
         question_data = Q.get_interface_Questionnaire()
         return {'Qid': list(question_data['Qid']),
@@ -59,26 +64,30 @@ class Start(Resource):
 
 class Submit(Resource):
     def post(self):
+        _verbose = False
         default_ = 'test_3_inputs.csv'
-        
-        
-        Q = Questionnaire()
-        Q._verbose = False
         json_data = request.get_json()
         ppv = json_data['ppv']
+        try:
+            compute_option = json_data['compute_ratio']
+        except:
+            compute_option = 'robust'
         if json_data['csv'] == "":
             csv = default_
         else:
             csv = StringIO(json_data['csv'])
-            #csv = default_
+            # csv = default_
+        
+        if _verbose: print('Working Questionnaire...')
+        if _verbose: print(csv)
             
         if '[' in str(ppv):
             ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
         else:
             ppv = float(ppv)
-            
-        Q.load_Questionnaire_csv(csv)
-        Q.generate_Questionnaire()
+
+        Q = Questionnaire(csv)
+        Q.generate_Questionnaire(compute_option)
         Q.prevelence = ppv
         # json_data = request.get_json()
         answers = json_data['answers']
