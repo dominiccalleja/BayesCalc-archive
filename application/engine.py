@@ -54,79 +54,48 @@ class Questionnaire(Test):
 
     def load_Questionnaire_csv(self,csv_file):
         self.csv = pd.read_csv(csv_file)
-        # if csv_file.split('.')[-1] == 'csv':
-        #     self.csv = pd.read_csv(csv_file, index_col=None)
-        # elif csv_file.split('.')[-1] == 'xlsx' or csv_file.split()[-1] == 'xls':
-        #     self.csv = pd.read_csv(csv_file, index_col=None)
 
     def generate_Questionnaire(self, compute_option = 'robust',midpoint = .5):
         self._check_existing_questions()
+        self.compute_option = compute_option
+        self.__new_method_generate_Questionnaire()
+
+    def get_LR(self, LRs, compute_option):
+        # Returns relevant LR interval for the chosen copmpute_option
         Compute_options = ['robust','precise', 'left', 'right', 'midpoint']
-        
-        if not [i for i in Compute_options if i == compute_option ]:
+        if not compute_option in Compute_options:
             print('ERROR: compute_option must be {}'.format(Compute_options))
         else:
-            if compute_option == Compute_options[1]:
-                self.compute_with_precise()
+            if compute_option == Compute_options[0]:
+                # Robust: return PLR0-PLR1 & NLR0-NLR1 intervals
+                return [
+                    Interval(LRs['PLR0'], LRs['PLR1']), 
+                    Interval(LRs['NLR0'], LRs['NLR1'])
+                    ]
+            elif compute_option == Compute_options[1]:
+                # PRecise: return PLR0-PLR1 & NLR0-NLR1 intervals
+                return [
+                    Interval(LRs['PLR'], LRs['PLR']), 
+                    Interval(LRs['NLR'], LRs['NLR'])
+                    ]
             elif compute_option == Compute_options[2]:
-                self.compute_with_midpoint(0)#self.compute_with_endpoint(right=False)
+                # Robust: return PLR0-PLR1 & NLR0-NLR1 intervals
+                return [
+                    Interval(LRs['PLR0'], LRs['PLR0']), 
+                    Interval(LRs['NLR0'], LRs['NLR0'])
+                    ]
             elif compute_option == Compute_options[3]:
-                self.compute_with_midpoint(1)
+                # Robust: return PLR0-PLR1 & NLR0-NLR1 intervals
+                return [
+                    Interval(LRs['PLR1'], LRs['PLR1']), 
+                    Interval(LRs['NLR1'], LRs['NLR1'])
+                    ]
             elif compute_option == Compute_options[4]:
-                self.compute_with_midpoint(midpoint)    
-
-        self.__new_method_generate_Questionnaire()
-        if not compute_option == 'robust':
-            self._revert_csv()
-
-        ### Remove this once we are all using the up to dat csv format
-        #if [i for i in self.csv.columns if i == 'Qtype']:
-        #else:
-        #    self.__deprecated_generate_Questionnaire()
-
-        #if self._verbose:
-        #    print('Question {} - {} [{}]'.format(i,question, qid))
-
-    ## Activate subsiquent with an option in generate Questionnaire! 
-    def compute_with_midpoint(self, midpoint = .5):
-        self._copy_csv()
-        PLR = self.csv['PLR0'] + (self.csv['PLR1'] - self.csv['PLR0'])*midpoint
-        NLR = self.csv['NLR0'] + (self.csv['NLR1'] - self.csv['NLR0'])*midpoint
-        self.csv['PLR0'] = PLR
-        self.csv['PLR1'] = PLR
-        self.csv['NLR0'] = NLR
-        self.csv['NLR1'] = NLR
-    
-    def compute_with_endpoint(self, right=True):
-        self._copy_csv()
-        if right:
-            ind = 1
-        else:
-            ind = 0 
-        l_csv = len(self.csv.index)
-        I = np.zeros([l_csv,2])
-        for i in range(l_csv):
-            I[i,:] = [self.csv['PLR0'].iloc[i],self.csv['PLR1'].iloc[i]]
-
-        self.csv['PLR0'] = I[:,ind]
-        self.csv['PLR1'] = I[:,ind]
-
-    def compute_with_precise(self):
-        self._copy_csv()
-        if not [i for i in self.csv.columns if i =='PLR']:
-            self.compute_with_midpoint()
-        else:
-            self.csv['PLR0'] = self.csv['PLR']
-            self.csv['PLR1'] = self.csv['PLR']
-            self.csv['NLR0'] = self.csv['NLR']
-            self.csv['NLR1'] = self.csv['NLR']
-
-
-    def _copy_csv(self):
-        self.csv_copy = self.csv.copy(deep=True)
-
-    def _revert_csv(self):
-        self.csv = self.csv_copy.copy(deep=True)
+                # Robust: return PLR0-PLR1 & NLR0-NLR1 intervals
+                return [
+                    Interval(Interval(LRs['PLR0'], LRs['PLR1']).midpoint()), 
+                    Interval(Interval(LRs['NLR0'], LRs['NLR1']).midpoint()) 
+                    ]
 
     def __new_method_generate_Questionnaire(self):
         Qtype = self.csv.Qtype.values
@@ -139,7 +108,6 @@ class Questionnaire(Test):
             qdep = self.csv.loc[i]['Dependant']
             qdescription = self.csv.loc[i]['Description']
             print(self.csv.loc[i]['Question'])
-
             if Qtype[i] == 'H':
                 header = self.csv.loc[i]['Question']
                 section +=1
@@ -152,13 +120,15 @@ class Questionnaire(Test):
                 NLRs = []
                 thresholds = []
                 while Qtype[j] == 'SA' :
+                    
+                    qPLR, qNLR = self.get_LR(self.csv.loc[j]['PLR0':'NLR'], self.compute_option)
                     if j == self.csv.index[-1]:
                         break
-                    PLRs.append([self.csv.loc[j]['PLR0'], self.csv.loc[j]['PLR1']])
+                    PLRs.append(qPLR)
                     if c ==0 :
-                        NLRs.append([self.csv.loc[j]['NLR0'], self.csv.loc[j]['NLR1']])
+                        NLRs.append(qNLR)
                     else:
-                        NLRs.append([self.csv.loc[j-1]['PLR0'], self.csv.loc[j-1]['PLR1']])
+                        NLRs.append(qPLR)
 
                     thresholds.append(float(re.findall(r'\d+',self.csv.loc[j]['Question'])[0])) ### Need to seperate the carrat
                     print(thresholds)
@@ -172,19 +142,10 @@ class Questionnaire(Test):
                 continue
             
             elif Qtype[i] == 'B':
+                qPLR, qNLR = self.get_LR(self.csv.loc[i]['PLR0':'NLR'], self.compute_option)
                 question = self.csv.loc[i]['Question']
-                PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
-                NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-                self._init_binary_question(qid,question,PLR,NLR, header,section, qdep,qdescription )
-                c += 1   
-
-    def __deprecated_generate_Questionnaire(self):
-        for i in self.csv.index:
-            qid = self.csv.loc[i]['Qid']
-            question = self.csv.loc[i]['Question']
-            PLR = [self.csv.loc[i]['PLR0'], self.csv.loc[i]['PLR1']]
-            NLR = [self.csv.loc[i]['NLR0'], self.csv.loc[i]['NLR1']]
-            self._init_binary_question(i,question,PLR,NLR)      
+                self._init_binary_question(qid,question,qPLR,qNLR, header,section, qdep,qdescription )
+                c += 1
 
     def get_N_questions(self):
         return len(self.csv.index)
@@ -232,7 +193,7 @@ class Questionnaire(Test):
             qId0 = list(self.question_dict.keys())[i]
             qtype = self.question_dict[qId0].Qtype
             #if qtype == 'S':
-            #    inp = float(re.findall(r'\d+',inp)[0])
+            #    inp = float(re.findall(r'\d+',inp)[0])6
 
             PPV = self.answer_question(qId0, inp, qtype, PPV)
             ppv_store.append(PPV)
@@ -318,7 +279,6 @@ class Questionnaire(Test):
 
 
 
-
 if __name__ == '__main__':
     import numpy as np
 
@@ -331,11 +291,10 @@ if __name__ == '__main__':
     #Q.load_Questionnaire_csv('/Users/dominiccalleja/GCA_App/GCA_engine/input_files/Vinnette_tests.csv')
     #Q.load_Questionnaire_csv('/Users/dominiccalleja/GCA_App/GCA_engine/input_files/Vinnette_tests.csv')
     #str(home.parent)+'/input_files/vanessa_modded.csv')
-    Q.generate_Questionnaire(compute_option='precise')
-    Q._copy_csv()
+    Q.generate_Questionnaire(compute_option='midpoint')
     CSV = Q.get_interface_Questionnaire()
 
-    Q.compute_with_precise()
+    #Q.compute_with_precise()
 
     Answers = np.ones(34)
     Answers[0] = 90
