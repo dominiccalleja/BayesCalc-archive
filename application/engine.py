@@ -206,8 +206,11 @@ class Questionnaire(Test):
 
     def answer_question(self,QID, answer, Qtype, PPV):
         if Qtype == 'S':
-            ppv = self.question_dict[QID].compute_tree(answer,PPV)
-            ans = 'Scaler'
+            if answer != -1:
+                ppv = self.question_dict[QID].compute_tree(answer,PPV)
+                ans = 'Scaler'
+            else:
+                ppv = PPV
         else:
             if answer == 1:
                 ppv = self.question_dict[QID].yes(PPV)
