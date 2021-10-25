@@ -31,7 +31,7 @@ class Start(Resource):
         try:
             compute_option = json_data['compute_ratio']
         except:
-            compute_option = 'robust'
+            compute_option = 'precise'
         if _verbose: print(json_data['csv'])
         if json_data['csv'] == "":
             csv = default_
@@ -71,7 +71,7 @@ class Submit(Resource):
         try:
             compute_option = json_data['compute_ratio']
         except:
-            compute_option = 'robust'
+            compute_option = 'precise'
         if json_data['csv'] == "":
             csv = default_
         else:
