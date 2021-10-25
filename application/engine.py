@@ -187,9 +187,8 @@ class Questionnaire(Test):
         self.question_dict[qId_0].description = qdescription
 
     def evaluate_Questionnaire(self, inputs):
-        ppv_store = [self.prevelence]
         PPV = Interval(self.prevelence)
-
+        ppv_store = [PPV]
         for i, inp in enumerate(inputs):
             qId0 = list(self.question_dict.keys())[i]
             qtype = self.question_dict[qId0].Qtype

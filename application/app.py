@@ -92,7 +92,8 @@ class Submit(Resource):
         # json_data = request.get_json()
         answers = json_data['answers']
         Q.evaluate_Questionnaire(answers)
-        return {'ppv': '[%.3f,%.3f]'%(Q.final_ppv.left,Q.final_ppv.right)}
+        inc_ppv = ['[{:.3f},{:.3f}]'.format(i.left,i.right) for i in Q.ppv_store ]
+        return {'ppv': '[%.3f,%.3f]'%(Q.final_ppv.left,Q.final_ppv.right), 'incremental_ppv':inc_ppv}
     
 def print_fact_array(ppv: Interval):
     #!TODO: make it work for other sizes
