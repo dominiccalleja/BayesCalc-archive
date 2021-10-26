@@ -11,7 +11,7 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7432275/
 As we expand our developer base we will add some communtiy rules. But for now, whilst the community is small we needen't worry. 
 
 ## TODO: 
-- BUG ---- DONT KNOW method is returning weird answers
+-[FIXED] BUG ---- DONT KNOW method is returning weird answers
 
 - Impliment generation of Question DB entry confusion matrix and history. Generation of ID, and forward processing. Maybe this would be better in JS? but harder to impliment. 
 - Impliment timeline generator
