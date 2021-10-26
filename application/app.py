@@ -22,35 +22,34 @@ def hello():
 class Start(Resource):
     def post(self):
         _verbose = False
-        default_ = 'test_3_inputs.csv'
+        # default_ = 'test_3_inputs.csv'
         
         
         
         json_data = request.get_json()
-        ppv = json_data['ppv']
+        # ppv = json_data['ppv']
         try:
             compute_option = json_data['compute_ratio']
         except:
             compute_option = 'precise'
         if _verbose: print(json_data['csv'])
-        if json_data['csv'] == "":
-            csv = default_
-        else:
-            csv = StringIO(json_data['csv'])
+        # if json_data['csv'] == "":
+        #     csv = default_
+        # else:
+        csv = StringIO(json_data['csv'])
             # csv = default_
             
-        if '[' in str(ppv):
-            ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
-        else:
-            ppv = float(ppv)
+        # if '[' in str(ppv):
+        #     ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
+        # else:
+        #     ppv = float(ppv)
 
         Q = Questionnaire(csv)
         Q._verbose = False
         Q.generate_Questionnaire(compute_option)
-        Q.prevelence = ppv
-        if hasattr(Q,'inc_question_ind'):
-            Q.inc_question_ind = 0
-            Q._increment_PPV = ppv
+        # if hasattr(Q,'inc_question_ind'):
+        #     Q.inc_question_ind = 0
+        #     Q._increment_PPV = ppv
         if _verbose: print(Q.csv)
         
         question_data = Q.get_interface_Questionnaire()
