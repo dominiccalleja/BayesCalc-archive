@@ -143,8 +143,37 @@ class Plot(Resource):
             'green_y' : green_y,
         }     
 
+def string2interval(JSint):
+    if '[' in JSint:
+        Int = JSint.replace('[','').replace(']','').split(',')
+        Int = [float(i) for i in Int]
+    elif isinstance(JSint, float):
+        Int = JSint
+    return Interval(Int)
+
+class Whatiftest(Resource):
+    
+    def post(self):
+        json_data = request.get_json() 
+        print('Sense: {}'.format(json_data['sensitivity']))
+        print('Sense: {}'.format(json_data['specificity']))
+        print(json_data['ppv'])
+        PPV = string2interval(json_data['ppv']) #json_data['ppv'].replace('[','').replace(']','').split(',')
+        print(PPV)
+        #TODO make sens spec interval and float sensitive 
+        
+        test = Test(json_data['sensitivity'],json_data['specificity'],PPV)
+        #test
+        Yes, No = test.what_if()
+        return {'sensitivity':json_data['sensitivity'],
+                'specificity':json_data['specificity'],
+                'PPV_YES':'[%.3f,%.3f]'%(Yes.left,Yes.right),
+                'PPV_NO':'[%.3f,%.3f]'%(No.left,No.right)}
+
+
 api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
+api.add_resource(Whatiftest,"/testthetest")
 api.add_resource(Plot,'/Plot')
 
 if __name__ == '__main__':

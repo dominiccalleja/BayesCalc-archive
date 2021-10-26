@@ -40,7 +40,7 @@ class Test(Question):
         test_string.append( 'This patients has a current PPV of {}'.format(self._PPV_pretest))
         test_string.append('\n\t A positive test would give the patient a PPV of {}'.format(if_positive))
         test_string.append('\n\t A negative test would give the patient a PPV of {}'.format(if_negative))
-    
+        self.test_string = test_string
         print(*test_string)
         return [if_positive, if_negative]
 
@@ -361,7 +361,7 @@ def get_nat_freq(numer,denom = 1000):
 
 
     T = Test(.77,.96,.14)    
-
+    T.what_if()
     Q.what_if_test(.77,.96,.14)
 
     for ans in P0:
