@@ -55,7 +55,7 @@ class Question_Methods:
 
     def dont_know(self,PPV):
         UB = compute_ppv(self.PLR, PPV)
-        LB = compute_npv(self.NLR, PPV)
+        LB = 1 -compute_npv(self.NLR, PPV)
         self.C_PPV = Interval([LB.left, UB.right])
         return self.C_PPV
 
