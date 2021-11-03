@@ -43,6 +43,20 @@ class Test(Question):
         self.test_string = test_string
         print(*test_string)
         return [if_positive, if_negative]
+    
+    def test_results(self,result):
+        if result == 1:
+            return self.yes(self._PPV_pretest)
+        elif result == 0:
+            return self.no(self._PPV_pretest)
+        elif result == 2:
+            return Interval(self.no(self._PPV_pretest).left,self.yes(self._PPV_pretest).right)
+        else:
+            return 'No Test'
+    
+    def interp_inconclusive(self,nfeatures, totalFeatures):
+        bounds = self.test_results(2)
+        return ((bounds.right - bounds.left) * nfeatures/totalFeatures)+bounds.left
 
 
 class Questionnaire(Test):
@@ -320,10 +334,10 @@ if __name__ == '__main__':
     Q.final_ppv
 
 
-def get_nat_freq(numer,denom = 1000):
-    A = numer*denom
-    B = denom - A    
-    return ['positive : {} of {}'.format(A,denom),'negative : {} of {}'.format(B,denom)]
+    def get_nat_freq(numer,denom = 1000):
+        A = numer*denom
+        B = denom - A    
+        return ['positive : {} of {}'.format(A,denom),'negative : {} of {}'.format(B,denom)]
 
     P0 = patients['PATIENT4']
     P0.values

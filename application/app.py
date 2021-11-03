@@ -10,7 +10,7 @@ import plotly.express as px
 import pandas as pd
 from math import floor
 import pba
-from application.engine import *
+from engine import *
 
 from io import StringIO
 
@@ -18,32 +18,32 @@ from io import StringIO
 @app.route("/")
 def hello():
     return "Hello World!"
+csv = 'application/default_questionnaire_v2.csv'
+
 
 class Start(Resource):
     def post(self):
         _verbose = False
         # default_ = 'test_3_inputs.csv'
-        
-        
-        
+
         json_data = request.get_json()
         # ppv = json_data['ppv']
         try:
             compute_option = json_data['compute_ratio']
         except:
             compute_option = 'precise'
-        if _verbose: print(json_data['csv'])
+        # if _verbose: print(json_data['csv'])
         # if json_data['csv'] == "":
         #     csv = default_
         # else:
-        csv = StringIO(json_data['csv'])
+        # csv = StringIO(json_data['csv'])
             # csv = default_
             
         # if '[' in str(ppv):
         #     ppv = pba.I(*[float(i) for i in ppv.replace('[','').replace(']',"").split(',')])
         # else:
         #     ppv = float(ppv)
-
+        pd.read_csv(csv)
         Q = Questionnaire(csv)
         Q._verbose = False
         Q.generate_Questionnaire(compute_option)
@@ -71,11 +71,12 @@ class Submit(Resource):
             compute_option = json_data['compute_ratio']
         except:
             compute_option = 'precise'
-        if json_data['csv'] == "":
-            csv = default_
-        else:
-            csv = StringIO(json_data['csv'])
-            # csv = default_
+        
+        # if json_data['csv'] == "":
+        #     csv = default_
+        # else:
+        #     csv = StringIO(json_data['csv'])
+        #     # csv = default_
         
         if _verbose: print('Working Questionnaire...')
         if _verbose: print(csv)
@@ -151,7 +152,6 @@ def string2interval(JSint):
     return Interval(Int)
 
 class Whatiftest(Resource):
-    
     def post(self):
         json_data = request.get_json() 
         print('Sense: {}'.format(json_data['sensitivity']))
@@ -169,6 +169,25 @@ class Whatiftest(Resource):
                 'PPV_YES':'[%.3f,%.3f]'%(Yes.left,Yes.right),
                 'PPV_NO':'[%.3f,%.3f]'%(No.left,No.right)}
 
+"""
+class TestResult(Resource):
+    
+    def post(self):
+        json_data = request.get_json() 
+        print('Sense: {}'.format(json_data['sensitivity']))
+        print('Sense: {}'.format(json_data['specificity']))
+        print(json_data['ppv'])
+        PPV = string2interval(json_data['ppv']) #json_data['ppv'].replace('[','').replace(']','').split(',')
+        print(PPV)
+        #TODO make sens spec interval and float sensitive 
+        
+        test = Test(json_data['sensitivity'],json_data['specificity'],PPV)
+        #test
+        result = test.test_results(json_data['result'])
+        return {'sensitivity':json_data['sensitivity'],
+                'specificity':json_data['specificity'],
+                'postTestPPV':'[%.3f,%.3f]'%(result.left,results.right),}
+"""
 
 api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
