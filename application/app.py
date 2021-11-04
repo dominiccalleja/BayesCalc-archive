@@ -169,29 +169,34 @@ class Whatiftest(Resource):
                 'PPV_YES':'[%.3f,%.3f]'%(Yes.left,Yes.right),
                 'PPV_NO':'[%.3f,%.3f]'%(No.left,No.right)}
 
-"""
+
 class TestResult(Resource):
     
     def post(self):
         json_data = request.get_json() 
-        print('Sense: {}'.format(json_data['sensitivity']))
-        print('Sense: {}'.format(json_data['specificity']))
-        print(json_data['ppv'])
+        print(10*'\n')
         PPV = string2interval(json_data['ppv']) #json_data['ppv'].replace('[','').replace(']','').split(',')
+        Sense = string2interval(json_data['sensitivity'])
+        Spec = string2interval(json_data['specificity'])
+        
+        print('Sense: {}'.format(Sense))
+        print('spec: {}'.format(Spec))
+        print(json_data['ppv'])
         print(PPV)
         #TODO make sens spec interval and float sensitive 
         
-        test = Test(json_data['sensitivity'],json_data['specificity'],PPV)
+        test = Test(Sense,Spec,PPV)
         #test
-        result = test.test_results(json_data['result'])
+        result = test.test_results(Interval(json_data['result']))
         return {'sensitivity':json_data['sensitivity'],
                 'specificity':json_data['specificity'],
-                'postTestPPV':'[%.3f,%.3f]'%(result.left,results.right),}
-"""
+                'postTestPPV':'[%.3f,%.3f]'%(result.left,result.right),}
+
 
 api.add_resource(Submit, '/Submit')
 api.add_resource(Start,"/Start")
 api.add_resource(Whatiftest,"/testthetest")
+api.add_resource(TestResult,'/testresult')
 api.add_resource(Plot,'/Plot')
 
 if __name__ == '__main__':
