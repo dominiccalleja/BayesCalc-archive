@@ -47,10 +47,8 @@ class Question_Methods:
         return self.C_PPV
 
     def no(self,PPV):
-        #C_PPV = compute_ppv(self.NLR, self.PPV)
         C_PPV = compute_npv(self.NLR, PPV)
         self.C_PPV = 1 - C_PPV
-        #self.
         return self.C_PPV
 
     def dont_know(self,PPV):

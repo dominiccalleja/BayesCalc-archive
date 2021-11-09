@@ -10,7 +10,12 @@ import plotly.express as px
 import pandas as pd
 from math import floor
 import pba
-from engine import *
+try:
+    print('run from root')
+    from application.engine import *
+except:
+    print('running from application')
+    from engine import *
 
 from io import StringIO
 
