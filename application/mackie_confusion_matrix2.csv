@@ -1,0 +1,488 @@
+Test,HALOQid,Study,tp,fp,fn,tn
+Age > 60,1002,Bley et al. 2005,6,9,3,3
+Age > 60,1002,Brittain et al. 1991,15,15,0,1
+Age > 60,1002,Gospe et al. 2019,7,5,0,1
+Age > 60,1002,Hautzel et al. 2008,15,2,3,3
+Age > 60,1002,Hedges et al. 1983,31,47,0,13
+Age > 60,1002,Oiwa et al. 2019,16,11,0,2
+Age > 60,1002,Varma et al. 2004,11,29,2,11
+Age > 70,1003,Bley et al. 2005,5,6,4,6
+Age > 70,1003,Brittain et al. 1991,14,13,1,3
+Age > 70,1003,Gospe et al. 2019,5,2,2,4
+Age > 70,1003,Hautzel et al. 2008,3,1,15,4
+Age > 70,1003,Hedges et al. 1983,26,26,5,34
+Age > 70,1003,Oiwa et al. 2019,13,9,3,4
+Age > 70,1003,Varma et al. 2004,10,16,3,24
+Age > 80,1004,Bley et al. 2005,1,2,8,10
+Age > 80,1004,Brittain et al. 1991,3,3,12,13
+Age > 80,1004,Gospe et al. 2019,2,1,5,5
+Age > 80,1004,Hautzel et al. 2008,0,0,18,5
+Age > 80,1004,Hedges et al. 1983,8,7,23,53
+Age > 80,1004,Oiwa et al. 2019,5,5,11,8
+AION,6011,Gonzalez-Lopez et al. 2013,12,24,69,230
+AION,6011,Hall et al. 2003,6,5,27,143
+AION,6011,Ing et al. 2018,2,11,17,79
+AION,6011,Knecht et al. 2015,8,3,12,8
+AION,6011,Luqmani et al. 2016,23,4,234,120
+AION,6011,Moutray et al. 2008,12,10,5,23
+AION,6011,Wells et al. 1989,5,12,9,68
+Anaemia,7001,Brittain et al. 1991,8,2,7,14
+Anaemia,7001,Chmelewski et al. 1992,2,10,28,58
+Anaemia,7001,Czihal et al. 2017,18,19,16,39
+Anaemia,7001,Fernandez-Herlihy 1988,18,25,11,53
+Anaemia,7001,Grossman et al. 2016,54,92,28,50
+Anaemia,7001,Hautzel et al. 2008,11,3,7,2
+Anaemia,7001,Hayreh et al. 1997,14,31,92,226
+Anaemia,7001,Mari et al. 2009,47,82,30,105
+Anaemia,7001,Oiwa et al. 2019,14,11,2,2
+Anaemia,7001,Rodriguez-Pla et al. 2007,35,52,11,27
+Anaemia,7001,Stuart 1989,5,22,9,39
+Anaemia,7001,Sundholm et al. 2019,26,23,10,19
+Anaemia,7001,Vilaseca et al. 1987,28,34,17,24
+Anaemia,7001,Younge et al. 2004,272,488,101,252
+Anorexia,4004,Fernandez-Herlihy 1988,10,6,19,72
+Anorexia,4004,Kent et al. 1989,3,17,5,45
+Anorexia,4004,Rodriguez-Pla et al. 2007,21,24,25,55
+Anorexia,4004,Stuart 1989,3,16,11,45
+Anorexia,4004,Toren et al. 2016,36,54,27,133
+Anorexia,4004,van der Geest et al. 2020,22,9,36,22
+Anorexia,4004,Vilaseca et al. 1987,32,35,13,23
+Anorexia,4004,Younge et al. 2004,69,93,304,647
+Any TA abnormality,6001,Conway et al. 2019,80,15,43,24
+Any TA abnormality,6001,Gabriel et al. 1995,119,160,53,193
+Any TA abnormality,6001,Ghinoi et al. 2008,6,0,3,11
+Any TA abnormality,6001,Grossman et al. 2016,20,19,62,123
+Any TA abnormality,6001,Hall et al. 1983,31,27,15,61
+Any TA abnormality,6001,Hayreh et al. 1997,21,33,85,224
+Any TA abnormality,6001,Hop et al. 2020,21,18,20,54
+Any TA abnormality,6001,Imfeld et al. 2020,18,1,50,33
+Any TA abnormality,6001,Ing et al. 2019,193,441,272,927
+Any TA abnormality,6001,Mari et al. 2009,24,17,31,70
+Any TA abnormality,6001,Oiwa et al. 2019,14,9,2,2
+Any TA abnormality,6001,Stuart 1989,9,2,5,59
+Any TA abnormality,6001,Vilaseca et al. 1987,38,21,7,37
+Arthralgia,5001,Fernandez-Herlihy 1988,6,14,23,64
+Arthralgia,5001,Kent et al. 1989,4,26,4,36
+Arthralgia,5001,Roth et al. 1984,4,5,14,28
+Arthralgia,5001,Stuart 1989,0,12,14,49
+Arthralgia,5001,Toren et al. 2016,17,54,46,133
+Arthralgia,5001,Vilaseca et al. 1987,18,22,27,36
+Constitutional symptoms,4001,Conway et al. 2019,75,13,48,26
+Constitutional symptoms,4001,El-Dairi et al. 2015,2,18,47,125
+Constitutional symptoms,4001,Grossman et al. 2016,50,71,32,71
+Constitutional symptoms,4001,Hay et al. 2019,22,35,1,5
+Constitutional symptoms,4001,Lariviere et al. 2016,5,4,10,5
+Constitutional symptoms,4001,Mari et al. 2009,54,121,24,70
+Constitutional symptoms,4001,Nielsen et al. 2019,47,20,9,14
+Constitutional symptoms,4001,Toren et al. 2016,46,131,17,56
+CRAO,6013,Gonzalez-Lopez et al. 2013,4,8,77,246
+CRAO,6013,Ing et al. 2018,1,0,18,90
+CRAO,6013,Moutray et al. 2008,1,4,16,29
+CRAO,6013,Stacy et al. 2015,3,9,18,28
+CRAO,6013,Wells et al. 1989,1,2,13,79
+CRP 25 mg/L,7024,Bley et al. 2005,9,10,0,2
+CRP 25 mg/L,7024,Hop et al. 2020,27,21,14,51
+CRP 25 mg/L,7024,Mukhtyar et al. 2022,13,2,2,6
+CRP 25 mg/L,7024,Oh et al. 2018,55,128,24,166
+CRP 25 mg/L,7024,Walvick et al. 2011,78,210,20,283
+CRP elevated,7014,Bley et al. 2005,9,11,0,1
+CRP elevated,7014,De Lott et al. 2015,68,153,12,73
+CRP elevated,7014,El-Dairi et al. 2015,28,34,2,12
+CRP elevated,7014,Kermani et al. 2012,153,408,24,179
+CRP elevated,7014,Lariviere et al. 2016,15,5,0,4
+CRP elevated,7014,Luqmani et al. 2016,156,49,35,38
+CRP elevated,7014,Mari et al. 2009,45,71,6,33
+CRP elevated,7014,Monti et al. 2017,77,50,33,42
+CRP elevated,7014,Mukhtyar et al. 2024,14,7,1,1
+CVA,3017,Gonzalez-Lopez et al. 2013,1,2,80,252
+CVA,3017,Grossman et al. 2016,3,11,79,131
+CVA,3017,Lariviere et al. 2016,1,2,14,7
+CVA,3017,Luqmani et al. 2016,5,2,252,122
+CVA,3017,Rodriguez-Pla et al. 2007,1,6,45,73
+Double vision,3016,Fernandez-Herlihy 1988,1,3,28,75
+Double vision,3016,Gonzalez-Lopez et al. 2013,4,11,77,243
+Double vision,3016,Hall et al. 1983,5,1,41,87
+Double vision,3016,Ing et al. 2019,47,105,418,1263
+Double vision,3016,Nielsen et al. 2019,1,1,55,33
+Double vision,3016,Skaug et al. 1995,2,6,20,70
+Double vision,3016,van der Geest et al. 2020,4,5,54,26
+Double vision,3016,Younge et al. 2004,13,7,360,733
+ESR > 100,7065,Bley et al. 2005,2,0,7,12
+ESR > 100,7065,Brittain et al. 1991,7,0,8,16
+ESR > 100,7065,Chmelewski et al. 1992,12,16,18,52
+ESR > 100,7065,Eshagian et al. 1980,16,6,18,26
+ESR > 100,7065,Gospe et al. 2019,0,0,7,6
+ESR > 100,7065,Hedges et al. 1983,6,5,25,55
+ESR > 100,7065,Mohamed et al. 2002,1,1,15,31
+ESR > 40,7015,Bley et al. 2005,9,6,0,6
+ESR > 40,7015,Brittain et al. 1991,13,7,2,9
+ESR > 40,7015,Eshagian et al. 1980,33,20,1,12
+ESR > 40,7015,Gospe et al. 2019,5,1,2,5
+ESR > 40,7015,Hedges et al. 1983,26,39,5,21
+ESR > 40,7015,Mohamed et al. 2002,11,13,5,19
+ESR > 40,7015,Skaug et al. 1995,20,32,2,44
+ESR > 40,7015,Stuart 1989,14,55,0,6
+ESR > 40,7015,Vilaseca et al. 1987,45,55,0,3
+ESR > 50,7025,Bilyk et al. 2017,8,25,6,32
+ESR > 50,7025,Bley et al. 2005,8,6,1,6
+ESR > 50,7025,Brittain et al. 1991,13,4,2,12
+ESR > 50,7025,Chan et al. 2019,91,56,48,75
+ESR > 50,7025,Chmelewski et al. 1992,25,58,5,10
+ESR > 50,7025,El-Dairi et al. 2015,33,100,16,43
+ESR > 50,7025,Eshagian et al. 1980,31,18,3,14
+ESR > 50,7025,Gospe et al. 2019,4,1,3,5
+ESR > 50,7025,Hop et al. 2020,25,25,16,47
+ESR > 50,7025,Lugo et al. 2011,17,46,0,9
+ESR > 50,7025,Mari et al. 2009,66,138,13,61
+ESR > 50,7025,Mohamed et al. 2002,11,10,5,22
+ESR > 50,7025,Oh et al. 2018,59,107,25,182
+ESR > 50,7025,Oiwa et al. 2019,13,9,3,4
+ESR > 50,7025,Rodriguez-Pla et al. 2007,45,64,1,15
+ESR > 50,7025,Suelves et al 2013,21,6,5,6
+ESR > 50,7025,Sundholm et al. 2019,27,21,8,19
+ESR > 50,7025,Varma et al. 2004,11,24,2,16
+ESR > 60,7035,Bley et al. 2005,8,5,1,7
+ESR > 60,7035,Brittain et al. 1991,12,1,3,15
+ESR > 60,7035,Eshagian et al. 1980,28,16,6,16
+ESR > 60,7035,Gospe et al. 2019,3,1,4,5
+ESR > 60,7035,Hedges et al. 1983,23,20,8,40
+ESR > 60,7035,Mohamed et al. 2002,7,7,9,25
+ESR > 80,7045,Bley et al. 2005,7,3,2,9
+ESR > 80,7045,Brittain et al. 1991,11,0,4,16
+ESR > 80,7045,Eshagian et al. 1980,21,9,13,23
+ESR > 80,7045,Gospe et al. 2019,1,1,6,5
+ESR > 80,7045,Hedges et al. 1983,17,12,14,48
+ESR > 80,7045,Mohamed et al. 2002,3,4,13,28
+ESR elevated,7006,Bilyk et al. 2017,8,32,6,25
+ESR elevated,7006,Bley et al. 2005,9,7,0,5
+ESR elevated,7006,Brittain et al. 1991,13,11,2,5
+ESR elevated,7006,De Lott et al. 2015,66,195,19,109
+ESR elevated,7006,El-Dairi et al. 2015,33,104,16,39
+ESR elevated,7006,Foroozan et al. 2002,37,32,10,12
+ESR elevated,7006,Gospe et al. 2019,6,2,1,4
+ESR elevated,7006,Habib et al. 2012,14,14,2,2
+ESR elevated,7006,Hall et al. 2003,21,83,3,30
+ESR elevated,7006,Karahaliou et al. 2006,19,30,3,3
+ESR elevated,7006,Kermani et al. 2012,149,414,28,173
+ESR elevated,7006,Monti et al. 2017,71,40,39,52
+ESR elevated,7006,Sommer et al. 2019,37,16,0,15
+ESR elevated,7006,Toren et al. 2016,31,51,32,136
+ESR elevated,7006,Younge et al. 2004,354,607,19,133
+Fever,4006,Chmelewski et al. 1992,11,21,19,47
+Fever,4006,Czihal et al. 2017,5,9,29,49
+Fever,4006,Diamantopoulos et al. 2014,9,14,37,28
+Fever,4006,Fernandez-Herlihy 1988,8,16,21,62
+Fever,4006,Gabriel et al. 1995,46,96,126,257
+Fever,4006,Gonzalez-Lopez et al. 2013,27,68,54,186
+Fever,4006,Habib et al. 2012,7,11,9,5
+Fever,4006,Hall et al. 1983,15,26,31,62
+Fever,4006,Hall et al. 2003,3,2,30,146
+Fever,4006,Hayreh et al. 1997,28,42,78,215
+Fever,4006,Hop et al. 2020,6,9,35,63
+Fever,4006,Imfeld et al. 2020,9,4,59,30
+Fever,4006,Karahaliou et al. 2006,9,19,13,14
+Fever,4006,Kent et al. 1989,3,12,5,50
+Fever,4006,Lariviere et al. 2016,2,1,13,8
+Fever,4006,Mohamed et al. 2002,2,2,15,31
+Fever,4006,Nielsen et al. 2019,30,14,26,20
+Fever,4006,Oiwa et al. 2019,12,11,4,1
+Fever,4006,Rodriguez-Pla et al. 2007,17,29,29,50
+Fever,4006,Roth et al. 1984,4,5,14,28
+Fever,4006,Stuart 1989,1,2,13,59
+Fever,4006,Toren et al. 2016,11,21,52,166
+Fever,4006,Vilaseca et al. 1987,27,26,18,32
+Headache,3000,Bley et al. 2008,27,12,9,11
+Headache,3000,Chmelewski et al. 1992,28,42,2,26
+Headache,3000,Czihal et al. 2017,24,10,10,48
+Headache,3000,Diamantopoulos et al. 2014,30,21,16,21
+Headache,3000,El-Dairi et al. 2015,38,99,11,44
+Headache,3000,Fernandez-Herlihy 1988,19,36,10,42
+Headache,3000,Gonzalez-Lopez et al. 2013,53,92,28,162
+Headache,3000,Grosser et al. 1999,10,55,6,49
+Headache,3000,Grossman et al. 2016,62,54,20,88
+Headache,3000,Habib et al. 2012,12,9,4,7
+Headache,3000,Hall et al. 1983,32,50,14,38
+Headache,3000,Hall et al. 2003,24,92,9,56
+Headache,3000,Hayreh et al. 1997,59,117,47,140
+Headache,3000,Hop et al. 2020,24,33,17,39
+Headache,3000,Imfeld et al. 2020,39,7,29,27
+Headache,3000,Ing et al. 2019,313,957,152,411
+Headache,3000,Karahaliou et al. 2006,14,10,8,23
+Headache,3000,Kent et al. 1989,8,42,0,20
+Headache,3000,Lariviere et al. 2016,10,7,5,2
+Headache,3000,Mari et al. 2009,67,123,11,70
+Headache,3000,Mohamed et al. 2002,15,29,2,4
+Headache,3000,Monti et al. 2017,81,62,29,30
+Headache,3000,Nielsen et al. 2019,36,10,20,24
+Headache,3000,Oiwa et al. 2019,12,9,4,4
+Headache,3000,Quinn et al. 2012,43,83,9,37
+Headache,3000,Rodriguez-Pla et al. 2007,36,35,10,44
+Headache,3000,Roncato et al. 2017,18,3,12,9
+Headache,3000,Roth et al. 1984,5,15,13,18
+Headache,3000,Sammel et al. 2019,18,35,2,3
+Headache,3000,Skaug et al. 1995,19,29,3,47
+Headache,3000,Stuart 1989,8,29,6,32
+Headache,3000,Sundholm et al. 2019,26,23,9,17
+Headache,3000,van der Geest et al. 2020,48,29,10,2
+Headache,3000,Varma et al. 2004,9,27,4,13
+Headache,3000,Vilaseca et al. 1987,36,27,9,31
+Headache,3000,Younge et al. 2004,251,294,122,446
+Ischemic optic neuropathy,6012,El-Dairi et al. 2015,16,38,33,105
+Ischemic optic neuropathy,6012,Luqmani et al. 2016,25,6,232,118
+Ischemic optic neuropathy,6012,Roth et al. 1984,2,6,16,27
+Ischemic optic neuropathy,6012,Stacy et al. 2015,10,3,11,34
+Jaw claudication,3006,Black et al. 2013,4,3,8,31
+Jaw claudication,3006,Chmelewski et al. 1992,15,12,15,56
+Jaw claudication,3006,Conway et al. 2019,50,1,73,38
+Jaw claudication,3006,Croft et al. 2015,13,3,23,48
+Jaw claudication,3006,Czihal et al. 2017,16,2,18,56
+Jaw claudication,3006,Diamantopoulos et al. 2014,18,3,28,39
+Jaw claudication,3006,El-Dairi et al. 2015,15,20,34,123
+Jaw claudication,3006,Fernandez-Herlihy 1988,12,4,17,74
+Jaw claudication,3006,Gonzalez-Lopez et al. 2013,31,21,50,233
+Jaw claudication,3006,Grosser et al. 1999,0,8,16,96
+Jaw claudication,3006,Grossman et al. 2016,20,5,62,137
+Jaw claudication,3006,Habib et al. 2012,4,1,12,15
+Jaw claudication,3006,Hall et al. 2003,16,16,17,132
+Jaw claudication,3006,Hayreh et al. 1997,51,22,55,235
+Jaw claudication,3006,Hedges et al. 1983,8,1,23,59
+Jaw claudication,3006,Hop et al. 2020,17,11,24,61
+Jaw claudication,3006,Imfeld et al. 2020,26,1,42,33
+Jaw claudication,3006,Ing et al. 2019,215,257,250,1111
+Jaw claudication,3006,Karahaliou et al. 2006,3,0,19,33
+Jaw claudication,3006,Kent et al. 1989,3,3,5,59
+Jaw claudication,3006,Lariviere et al. 2016,4,1,11,8
+Jaw claudication,3006,Mari et al. 2009,30,27,42,122
+Jaw claudication,3006,Monti et al. 2017,42,8,68,84
+Jaw claudication,3006,Nielsen et al. 2019,13,0,43,34
+Jaw claudication,3006,Oiwa et al. 2019,6,3,9,8
+Jaw claudication,3006,Quinn et al. 2012,17,16,16,74
+Jaw claudication,3006,Rodriguez-Pla et al. 2007,17,6,29,73
+Jaw claudication,3006,Roth et al. 1984,3,2,15,31
+Jaw claudication,3006,Sammel et al. 2019,7,10,13,28
+Jaw claudication,3006,Skaug et al. 1995,2,0,20,76
+Jaw claudication,3006,Stuart 1989,4,2,10,59
+Jaw claudication,3006,Sundholm et al. 2019,15,8,21,34
+Jaw claudication,3006,van der Geest et al. 2020,32,10,26,21
+Jaw claudication,3006,Vilaseca et al. 1987,19,7,26,51
+Jaw claudication,3006,Younge et al. 2004,149,43,224,697
+Limb claudication,5006,Bley et al. 2008,11,0,25,23
+Limb claudication,5006,Czihal et al. 2017,4,2,30,56
+Limb claudication,5006,Hay et al. 2019,3,0,20,40
+Limb claudication,5006,Nielsen et al. 2019,11,2,45,32
+Limb claudication,5006,Oiwa et al. 2019,1,0,13,9
+Limb claudication,5006,Sundholm et al. 2019,13,15,23,27
+Loss of vision,3013,Fernandez-Herlihy 1988,2,8,27,70
+Loss of vision,3013,Gonzalez-Lopez et al. 2013,22,46,59,208
+Loss of vision,3013,Grosser et al. 1999,6,27,10,77
+Loss of vision,3013,Hall et al. 1983,11,21,35,67
+Loss of vision,3013,Imfeld et al. 2020,10,3,58,31
+Loss of vision,3013,Ing et al. 2019,126,235,339,1133
+Loss of vision,3013,Karahaliou et al. 2006,5,2,17,31
+Loss of vision,3013,Luqmani et al. 2016,94,39,163,85
+Loss of vision,3013,Nielsen et al. 2019,0,0,56,34
+Loss of vision,3013,Quinn et al. 2012,14,12,20,78
+Loss of vision,3013,Roncato et al. 2017,7,1,23,11
+Loss of vision,3013,Roth et al. 1984,2,8,16,25
+Loss of vision,3013,Skaug et al. 1995,8,48,14,28
+Loss of vision,3013,Younge et al. 2004,49,63,324,677
+Malaise,4003,Diamantopoulos et al. 2014,18,17,28,25
+Malaise,4003,Hayreh et al. 1997,40,78,66,179
+Malaise,4003,Kent et al. 1989,4,13,4,49
+Malaise,4003,Oiwa et al. 2019,11,10,4,1
+Malaise,4003,Rodriguez-Pla et al. 2007,19,22,27,57
+Malaise,4003,Stuart 1989,6,22,8,39
+Malaise,4003,Sundholm et al. 2019,28,26,8,16
+Malaise,4003,Toren et al. 2016,37,110,26,77
+Malaise,4003,van der Geest et al. 2020,42,23,16,8
+Malaise,4003,Vilaseca et al. 1987,32,33,13,25
+Male,2000,Bilyk et al. 2017,2,15,12,42
+Male,2000,Black et al. 2013,4,9,8,25
+Male,2000,Bley et al. 2008,17,10,19,13
+Male,2000,Brittain et al. 1991,2,4,13,12
+Male,2000,Chan et al. 2019,46,45,93,86
+Male,2000,Chmelewski et al. 1992,8,23,22,45
+Male,2000,Conway et al. 2019,51,13,72,26
+Male,2000,Croft et al. 2015,10,17,26,34
+Male,2000,Czihal et al. 2017,13,27,21,31
+Male,2000,De Lott et al. 2015,32,101,58,213
+Male,2000,Diamantopoulos et al. 2014,13,21,33,21
+Male,2000,El-Dairi et al. 2015,12,47,37,96
+Male,2000,Gonzalez-Lopez et al. 2013,26,89,55,165
+Male,2000,Gospe et al. 2019,1,3,6,3
+Male,2000,Grosser et al. 1999,5,22,11,82
+Male,2000,Habib et al. 2012,5,8,11,8
+Male,2000,Hall et al. 1983,20,25,26,63
+Male,2000,Hautzel et al. 2008,3,1,15,4
+Male,2000,Hay et al. 2019,7,23,16,17
+Male,2000,Hayreh et al. 1997,29,94,77,163
+Male,2000,Hop et al. 2020,19,25,22,47
+Male,2000,Imfeld et al. 2020,24,13,44,21
+Male,2000,Ing et al. 2019,136,435,329,933
+Male,2000,Karahaliou et al. 2006,9,16,13,17
+Male,2000,Lariviere et al. 2016,4,4,11,5
+Male,2000,Lugo et al. 2011,8,25,25,80
+Male,2000,Mari et al. 2009,18,79,61,120
+Male,2000,Mohamed et al. 2002,6,9,11,24
+Male,2000,Nielsen et al. 2019,24,18,32,16
+Male,2000,Oh et al. 2018,40,127,86,284
+Male,2000,Oiwa et al. 2019,6,7,9,6
+Male,2000,Rodriguez-Pla et al. 2007,12,29,34,50
+Male,2000,Roncato et al. 2017,8,5,22,7
+Male,2000,Roth et al. 1984,9,16,9,17
+Male,2000,Sammel et al. 2019,7,10,13,28
+Male,2000,Skaug et al. 1995,2,25,20,51
+Male,2000,Stuart 1989,3,14,11,47
+Male,2000,Suelves et al 2013,5,4,21,8
+Male,2000,Sundholm et al. 2019,14,17,21,23
+Male,2000,van der Geest et al. 2020,15,11,43,20
+Male,2000,Vilaseca et al. 1987,19,20,26,38
+Male,2000,Younge et al. 2004,119,286,254,454
+Myalgia,5002,Czihal et al. 2017,14,17,20,41
+Myalgia,5002,Diamantopoulos et al. 2014,17,10,29,32
+Myalgia,5002,Gonzalez-Lopez et al. 2013,42,119,39,135
+Myalgia,5002,Habib et al. 2012,5,7,11,9
+Myalgia,5002,Hayreh et al. 1997,31,68,75,189
+Myalgia,5002,Imfeld et al. 2020,26,16,42,18
+Myalgia,5002,Karahaliou et al. 2006,7,15,15,18
+Myalgia,5002,Kent et al. 1989,1,32,7,30
+Myalgia,5002,Lariviere et al. 2016,8,5,7,4
+Myalgia,5002,Nielsen et al. 2019,24,31,32,3
+Myalgia,5002,Rodriguez-Pla et al. 2007,16,31,30,48
+Myalgia,5002,Roth et al. 1984,5,3,13,30
+Myalgia,5002,Stuart 1989,9,39,5,22
+Myalgia,5002,Toren et al. 2016,24,63,39,124
+Myalgia,5002,Vilaseca et al. 1987,24,28,21,30
+Platelets > 400,7023,Bilyk et al. 2017,9,2,5,55
+Platelets > 400,7023,El-Dairi et al. 2015,10,15,39,128
+Platelets > 400,7023,Foroozan et al. 2002,27,4,20,40
+Platelets > 400,7023,Oh et al. 2018,44,57,45,253
+Platelets > 400,7023,Walvick et al. 2011,113,214,138,1098
+PMR previous,5005,Chmelewski et al. 1992,7,2,23,66
+PMR previous,5005,Hop et al. 2020,9,10,32,62
+PMR previous,5005,Stacy et al. 2015,3,2,18,35
+PMR previous,5005,Toren et al. 2016,10,30,53,157
+PMR,5003,Aschwanden et al. 2013,16,17,27,20
+PMR,5003,Aschwanden et al. 2015,7,19,17,17
+PMR,5003,Chmelewski et al. 1992,17,47,13,21
+PMR,5003,Conway et al. 2019,58,12,65,27
+PMR,5003,Croft et al. 2015,22,27,14,24
+PMR,5003,El-Dairi et al. 2015,3,12,46,131
+PMR,5003,Fernandez-Herlihy 1988,11,22,18,56
+PMR,5003,Gabriel et al. 1995,50,89,122,264
+PMR,5003,Grossman et al. 2016,26,32,56,110
+PMR,5003,Hall et al. 1983,17,35,29,53
+PMR,5003,Hay et al. 2019,12,9,11,31
+PMR,5003,Hedges et al. 1983,8,5,23,55
+PMR,5003,Kent et al. 1989,2,18,6,44
+PMR,5003,Knecht et al. 2015,7,5,13,6
+PMR,5003,Mari et al. 2009,39,84,37,82
+PMR,5003,Mohamed et al. 2002,2,2,15,31
+PMR,5003,Monti et al. 2017,34,16,76,76
+PMR,5003,Oiwa et al. 2019,3,2,13,10
+PMR,5003,Roth et al. 1984,5,0,13,33
+PMR,5003,Sammel et al. 2019,7,12,13,26
+PMR,5003,Sundholm et al. 2019,18,15,17,25
+PMR,5003,van der Geest et al. 2020,14,2,44,29
+PMR,5003,Wells et al. 1989,1,11,10,73
+Scalp tenderness,3003,Black et al. 2013,9,7,3,27
+Scalp tenderness,3003,Conway et al. 2019,64,22,59,17
+Scalp tenderness,3003,Fernandez-Herlihy 1988,16,34,13,44
+Scalp tenderness,3003,Hall et al. 1983,4,8,42,80
+Scalp tenderness,3003,Hayreh et al. 1997,19,27,87,230
+Scalp tenderness,3003,Hop et al. 2020,14,18,27,54
+Scalp tenderness,3003,Imfeld et al. 2020,26,3,42,31
+Scalp tenderness,3003,Knecht et al. 2015,11,3,9,8
+Scalp tenderness,3003,Lariviere et al. 2016,5,2,10,7
+Scalp tenderness,3003,Monti et al. 2017,44,12,66,80
+Scalp tenderness,3003,Nielsen et al. 2019,19,4,37,30
+Scalp tenderness,3003,Rodriguez-Pla et al. 2007,15,6,31,73
+Scalp tenderness,3003,Toren et al. 2016,30,79,33,108
+Scalp tenderness,3003,van der Geest et al. 2020,35,17,23,14
+Scalp tenderness,3003,Younge et al. 2004,124,79,249,661
+TA loss of pulse,6004,Gonzalez-Lopez et al. 2013,32,33,49,221
+TA loss of pulse,6004,Habib et al. 2012,8,2,8,14
+TA loss of pulse,6004,Luqmani et al. 2016,79,12,178,112
+TA loss of pulse,6004,Oiwa et al. 2019,5,1,10,8
+TA loss of pulse,6004,Quinn et al. 2012,8,4,17,51
+TA loss of pulse,6004,Rodriguez-Pla et al. 2007,26,8,20,71
+TA loss of pulse,6004,Toren et al. 2016,22,25,41,162
+TA tenderness,6002,Habib et al. 2012,8,2,8,14
+TA tenderness,6002,Hedges et al. 1983,15,9,16,51
+TA tenderness,6002,Karahaliou et al. 2006,8,3,14,30
+TA tenderness,6002,Kent et al. 1989,5,17,3,45
+TA tenderness,6002,Luqmani et al. 2016,125,67,132,57
+TA tenderness,6002,Oiwa et al. 2019,8,6,7,7
+TA tenderness,6002,Rodriguez-Pla et al. 2007,3,3,43,76
+TA tenderness,6002,Roth et al. 1984,1,1,17,32
+TA tenderness,6002,Toren et al. 2016,18,31,45,156
+TA tenderness,6002,Varma et al. 2004,10,19,3,21
+TA thickening,6003,Aschwanden et al. 2013,13,4,30,33
+TA thickening,6003,Aschwanden et al. 2015,7,2,17,34
+TA thickening,6003,Croft et al. 2015,18,2,18,49
+TA thickening,6003,Czihal et al. 2017,12,1,22,57
+TA thickening,6003,Luqmani et al. 2016,86,16,171,108
+TA thickening,6003,Oiwa et al. 2019,14,7,2,6
+TA thickening,6003,Rodriguez-Pla et al. 2007,28,6,18,73
+TA thickening,6003,Sundholm et al. 2019,13,5,22,35
+Temporal headache,3001,Black et al. 2013,7,12,5,22
+Temporal headache,3001,Conway et al. 2019,90,28,33,11
+Temporal headache,3001,Croft et al. 2015,33,47,3,4
+Temporal headache,3001,Toren et al. 2016,24,94,39,93
+Temporal tenderness,6002,Croft et al. 2015,26,4,10,47
+Temporal tenderness,6002,Diamantopoulos et al. 2014,17,4,29,38
+Temporal tenderness,6002,Gonzalez-Lopez et al. 2013,40,17,41,237
+Temporal tenderness,6002,Mohamed et al. 2002,11,25,6,8
+Temporal tenderness,6002,Skaug et al. 1995,7,11,15,65
+Transient vision loss,3015,Fernandez-Herlihy 1988,4,9,25,69
+Transient vision loss,3015,Gonzalez-Lopez et al. 2013,10,14,71,240
+Transient vision loss,3015,Imfeld et al. 2020,5,1,63,33
+Transient vision loss,3015,Moutray et al. 2008,1,4,16,29
+Transient vision loss,3015,Nielsen et al. 2019,3,0,53,34
+Transient vision loss,3015,Stacy et al. 2015,3,6,18,31
+Transient vision loss,3015,Toren et al. 2016,10,34,53,153
+Transient vision loss,3015,van der Geest et al. 2020,2,0,56,31
+Transient vision loss,3015,Wells et al. 1989,5,11,9,75
+Visual disturbance,3012,Aschwanden et al. 2013,11,11,32,26
+Visual disturbance,3012,Aschwanden et al. 2015,9,7,15,29
+Visual disturbance,3012,Black et al. 2013,4,8,8,26
+Visual disturbance,3012,Bley et al. 2008,18,13,18,10
+Visual disturbance,3012,Chmelewski et al. 1992,18,32,12,36
+Visual disturbance,3012,Croft et al. 2015,17,25,19,26
+Visual disturbance,3012,Czihal et al. 2017,20,17,14,41
+Visual disturbance,3012,Fernandez-Herlihy 1988,8,32,21,46
+Visual disturbance,3012,Gabriel et al. 1995,51,119,121,234
+Visual disturbance,3012,Grossman et al. 2016,22,29,60,113
+Visual disturbance,3012,Habib et al. 2012,4,1,12,15
+Visual disturbance,3012,Hop et al. 2020,14,18,27,54
+Visual disturbance,3012,Kent et al. 1989,3,10,5,52
+Visual disturbance,3012,Lariviere et al. 2016,4,3,11,6
+Visual disturbance,3012,Luqmani et al. 2016,115,46,142,78
+Visual disturbance,3012,Mari et al. 2009,22,38,53,103
+Visual disturbance,3012,Mohamed et al. 2002,4,17,13,16
+Visual disturbance,3012,Monti et al. 2017,38,17,72,75
+Visual disturbance,3012,Nielsen et al. 2019,11,3,45,31
+Visual disturbance,3012,Oiwa et al. 2019,1,1,15,11
+Visual disturbance,3012,Rodriguez-Pla et al. 2007,15,22,31,57
+Visual disturbance,3012,Sammel et al. 2019,6,15,14,23
+Visual disturbance,3012,Stuart 1989,6,13,8,48
+Visual disturbance,3012,Sundholm et al. 2019,13,14,23,28
+Visual disturbance,3012,Vilaseca et al. 1987,15,13,30,45
+Weight loss,4005,Aschwanden et al. 2013,21,3,22,34
+Weight loss,4005,Aschwanden et al. 2015,5,5,19,31
+Weight loss,4005,Croft et al. 2015,6,9,30,42
+Weight loss,4005,Diamantopoulos et al. 2014,12,7,34,35
+Weight loss,4005,Fernandez-Herlihy 1988,7,13,22,65
+Weight loss,4005,Gonzalez-Lopez et al. 2013,23,44,58,210
+Weight loss,4005,Hop et al. 2020,17,14,24,58
+Weight loss,4005,Kent et al. 1989,1,13,7,49
+Weight loss,4005,Lariviere et al. 2016,4,3,11,6
+Weight loss,4005,Nielsen et al. 2019,44,15,12,19
+Weight loss,4005,Oiwa et al. 2019,10,2,5,9
+Weight loss,4005,Rodriguez-Pla et al. 2007,25,22,21,57
+Weight loss,4005,Stacy et al. 2015,11,10,10,27
+Weight loss,4005,Stuart 1989,3,19,11,42
+Weight loss,4005,Sundholm et al. 2019,18,10,18,32
+Weight loss,4005,Toren et al. 2016,31,43,32,144
+Weight loss,4005,Vilaseca et al. 1987,27,30,18,28
+Weight loss,4005,Younge et al. 2004,91,140,282,600
