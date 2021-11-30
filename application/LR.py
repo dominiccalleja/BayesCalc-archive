@@ -57,12 +57,12 @@ for i in list(Imprecise_LR.keys()):
     ax[1, 1].set_xlabel('-ve LR')
     ax[1, 0].set_ylabel('Confidence')
     fig.layout='tight'
-    plt.savefig('/Users/dominiccalleja/GCA_App/GCA_engine/LRfigures/{}.png'.format(i))
+    # plt.savefig('/Users/dominiccalleja/GCA_App/GCA_engine/LRfigures/{}.png'.format(i))
     plt.show()
 
 
-class CBoxLR():
+# class CBoxLR():
 
-    def __init__(self):
+#     def __init__(self):
 
     
